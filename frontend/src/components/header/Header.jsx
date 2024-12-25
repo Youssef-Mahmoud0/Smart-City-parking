@@ -10,18 +10,12 @@ function Header({ title }) {
     const driverID = 1;
     useEffect(() => {
         if (title != 'Driver') return
-        getDriverNotifications(driverID)
-            .then((data) => {
-                setNotifications(data);
-            })
-            .catch((error) => {
-                console.error('Failed to fetch notifications:', error);
-            });
+        handleGetNotifications()
     }, [])
     useEffect(() => {
-        if (!showNotifications) return
+        console.log(showNotifications)
         seeNotifications(driverID)
-        getDriverNotifications(driverID)
+        handleGetNotifications()
     }, [showNotifications])
     useEffect(() => {
         if (title != 'Driver') return
@@ -44,7 +38,7 @@ function Header({ title }) {
                 progress: undefined,
                 type: notification.type === 'error' ? 'confirmation' : 'success'
             });
-            getDriverNotifications(driverID)
+            handleGetNotifications()
         };
 
         socket.onclose = () => {
@@ -57,6 +51,10 @@ function Header({ title }) {
 
     }, []);
 
+    const handleGetNotifications = async() => {
+        const notifications = await getDriverNotifications(driverID)
+        setNotifications(notifications)
+    }
     return (
         <header className="app-header">
             <h1>{title} Dashboard</h1>
@@ -65,9 +63,9 @@ function Header({ title }) {
                     <div className="notification-icon">
                         <i className="fa-solid fa-bell" onClick={() => setShowNotifications(!showNotifications)}></i>
                         {
-                            notifications.length > 0 && (
+                            notifications.filter(notification => notification.seen === false).length > 0 && (
                                 <div className="notification-count">
-                                    {notifications.length}
+                                    {notifications.filter(notification => notification.seen === false).length}
                                 </div>
                             )
                         }
