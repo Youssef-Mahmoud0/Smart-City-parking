@@ -22,8 +22,8 @@ public class AuthService {
         public void driverSignUp(SignUpRequest signUpRequest) {
             String password = passwordService.hashPassword(signUpRequest.getPassword());
             signUpRequest.setPassword(password);
-//            if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent())
-//                throw new EmailAlreadyRegisteredException("Email already exists.");
+            if (driverRepository.findByEmail(signUpRequest.getEmail()).isPresent())
+                throw new EmailAlreadyRegisteredException("Email already exists.");
             System.out.println("Email not found");
             signUpRequest.setUserType(UserType.DRIVER);
             String signUpToken = jwtUtil.generateSignupToken(signUpRequest);
@@ -32,9 +32,9 @@ public class AuthService {
         }
 
         public void createNewUser(SignUpRequest request){
-//            if(userRepository.findByEmail(request.getEmail()).isPresent()){
-//                throw new EmailAlreadyRegisteredException("User already exists");
-//            }
+            if(driverRepository.findByEmail(request.getEmail()).isPresent()){
+                throw new EmailAlreadyRegisteredException("User already exists");
+            }
             System.out.println(request.getUserType());
             System.out.println(request.getPaymentMethod());
             if (request.getUserType() == UserType.DRIVER) {
