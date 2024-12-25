@@ -1,0 +1,28 @@
+.profile-container {
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.info-group {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    align-items: center;
+}
+
+.info-group label {
+    font-weight: bold;
+    color: #555;
+}
+
+.info-group span {
+    color: #333;
+}

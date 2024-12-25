@@ -1,0 +1,36 @@
+.penalties-container {
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.penalties-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.penalty-item {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    align-items: center;
+}
+
+.penalty-date {
+    color: #666;
+}
+
+.penalty-description {
+    font-weight: 500;
+}
+
+.penalty-amount {
+    text-align: right;
+    color: #dc3545;
+    font-weight: bold;
+}

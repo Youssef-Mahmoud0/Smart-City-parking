@@ -1,0 +1,17 @@
+.driver-home {
+    min-height: 100vh;
+    background-color: #f0f2f5;
+}
+
+
+.driver-home .driver-main {
+    padding: 2rem;
+}
+
+.driver-home .content-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
