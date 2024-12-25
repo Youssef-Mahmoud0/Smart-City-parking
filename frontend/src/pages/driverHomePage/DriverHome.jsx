@@ -2,7 +2,7 @@ import React from "react";
 import Header from "../../components/header/Header";
 import DriverProfile from "../../components/driverProfile/DriverProfile";
 import PenaltiesList from "../../components/penaltiesList/PenaltiesList";
-import MapPlaceholder from "../../components/mapPlaceholder/MapPlaceholder";
+import MapPlaceholder from "../../components/mapPlaceHolder/MapPlaceholder";
 
 import "./DriverHome.css";
 
