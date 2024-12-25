@@ -3,12 +3,16 @@ import './AuthForms.css';
 
 function LoginForm({ onLogin }) {
     const [formData, setFormData] = useState({
-        phoneNumber: '',
+        email: '',
         password: '',
     });
 
+        const [errors, setErrors] = useState({});
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        validateData();
+        if (Object.keys(errors).length > 0) return;
         onLogin(formData);
     };
 
@@ -18,25 +22,34 @@ function LoginForm({ onLogin }) {
             [e.target.name]: e.target.value
         });
     };
+    const validateData = () => {
+        const newErrors = {};
+        if (!formData.email) newErrors.email = 'Email is required.';
+        else if (!/^\S+@gmail\.com$/.test(formData.email)) {
+            newErrors.email =
+                "Email must be a valid Gmail address (e.g., example@gmail.com).";
+        }
+        if (!formData.password) 
+            newErrors.password = "Password is required.";
+        setErrors(newErrors);
+    };
 
     return (
         <form className="auth-form" onSubmit={handleSubmit}>
             <h2>Driver Login</h2>
 
             <div className="form-group">
-                <label htmlFor="phoneNumber">Phone Number</label>
+                <label htmlFor="email">Phone Number</label>
                 <input
-                    type="tel"
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    value={formData.phoneNumber}
+                    type="text"
+                    id="email"
+                    name="email"
+                    value={formData.email}
                     onChange={handleChange}
-                    pattern="[0-9]{10}"
-                    placeholder="1234567890"
-                    required
+                    placeholder="example@gmail.com"
                 />
             </div>
-
+            {errors.email && <p className="error">{errors.email}</p>}
             <div className="form-group">
                 <label htmlFor="password">Password</label>
                 <input
@@ -45,10 +58,9 @@ function LoginForm({ onLogin }) {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    required
                 />
             </div>
-
+            {errors.password && <p className="error">{errors.password}</p>}
             <button type="submit" className="auth-button">Log In</button>
         </form>
     );

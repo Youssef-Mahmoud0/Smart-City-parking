@@ -1,20 +1,12 @@
 import React, { useState } from 'react';
 import LoginForm from '../../components/auth/LoginForm';
 import SignupForm from '../../components/auth/SignupForm';
+import { handleLogin, handleDriverSignup } from '../../services/authService';
 import './AuthPage.css';
 
 function AuthPage() {
     const [isLogin, setIsLogin] = useState(true);
 
-    const handleLogin = (data) => {
-        console.log('Login data:', data);
-        // Implement login logic here
-    };
-
-    const handleSignup = (data) => {
-        console.log('Signup data:', data);
-        // Implement signup logic here
-    };
 
     return (
         <div className="auth-page">
@@ -22,7 +14,7 @@ function AuthPage() {
                 {isLogin ? (
                     <LoginForm onLogin={handleLogin} />
                 ) : (
-                    <SignupForm onSignup={handleSignup} />
+                    <SignupForm onSignup={handleDriverSignup} />
                 )}
 
                 <div className="auth-switch">

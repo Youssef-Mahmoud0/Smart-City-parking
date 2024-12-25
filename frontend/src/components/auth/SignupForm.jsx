@@ -5,13 +5,54 @@ function SignupForm({ onSignup }) {
     const [formData, setFormData] = useState({
         name: '',
         phoneNumber: '',
-        licensePlate: '',
+        licensePlateNumber: '',
         paymentMethod: '',
         password: '',
+        email: '',
     });
+    const [errors, setErrors] = useState({});
+
+    const validateData = () => {
+        const newErrors = {};
+        if (!formData.name) newErrors.name = 'Name is required.';
+        else if (formData.name.length < 3) newErrors.name = 'Name must be at least 3 characters long.';
+        else if (formData.name.length > 50) newErrors.name = 'Name must be at most 50 characters long.';
+        else if (!/^[a-zA-Z\s]*$/.test(formData.name)) newErrors.name = 'Name must contain only letters and spaces.';
+        if (!formData.phoneNumber) newErrors.phoneNumber = 'Phone number is required.';
+        else if (!/^0[0-9]{10}$/.test(formData.phoneNumber)) {
+            newErrors.phoneNumber = 'Phone number must be 11 digits long and start with 0.';
+        }
+        if (!formData.email) newErrors.email = 'Email is required.';
+        else if (!/^\S+@gmail\.com$/.test(formData.email)) {
+            newErrors.email =
+                "Email must be a valid Gmail address (e.g., example@gmail.com).";
+        }
+        if (!formData.licensePlateNumber) newErrors.licensePlateNumber = 'License plate is required.';
+        else if (formData.licensePlateNumber.length < 3) newErrors.licensePlateNumber = 'License plate must be at least 3 characters long.';
+        else if (formData.licensePlateNumber.length > 10) newErrors.licensePlateNumber = 'License plate must be at most 10 characters long.';
+        if (!formData.paymentMethod) newErrors.paymentMethod = 'Payment method is required.';
+        if (!formData.password) {
+            newErrors.password = "Password is required.";
+        } else if (formData.password.length < 8) {
+            newErrors.password = "Password must be at least 8 characters long.";
+        } else if (!/[A-Z]/.test(formData.password)) {
+            newErrors.password = "Password must contain at least one uppercase letter.";
+        } else if (!/[a-z]/.test(formData.password)) {
+            newErrors.password = "Password must contain at least one lowercase letter.";
+        } else if (!/[0-9]/.test(formData.password)) {
+            newErrors.password = "Password must contain at least one number.";
+        } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
+            newErrors.password = "Password must contain at least one special character.";
+        }  else if (formData.password.length > 50) {
+            newErrors.password = "Password must be at most 50 characters";
+        }
+        setErrors(newErrors);
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        validateData();
+        if (Object.keys(errors).length > 0) return;
         onSignup(formData);
     };
 
@@ -34,36 +75,47 @@ function SignupForm({ onSignup }) {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    required
                 />
             </div>
+            {errors.name && <p className="error">{errors.name}</p>}
 
             <div className="form-group">
                 <label htmlFor="phoneNumber">Phone Number</label>
                 <input
-                    type="tel"
+                    type="text"
                     id="phoneNumber"
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleChange}
-                    pattern="[0-9]{10}"
-                    placeholder="1234567890"
-                    required
+                    placeholder="01234567890"
                 />
             </div>
+            {errors.phoneNumber && <p className="error">{errors.phoneNumber}</p>}
 
             <div className="form-group">
-                <label htmlFor="licensePlate">License Plate Number</label>
+                <label htmlFor="email">Email</label>
                 <input
                     type="text"
-                    id="licensePlate"
-                    name="licensePlate"
-                    value={formData.licensePlate}
+                    id="email"
+                    name="email"
+                    value={formData.email}
                     onChange={handleChange}
-                    required
+                    placeholder="example@gmail.com"
                 />
             </div>
 
+            {errors.email && <p className="error">{errors.email}</p>}
+            <div className="form-group">
+                <label htmlFor="licensePlateNumber">License Plate Number</label>
+                <input
+                    type="text"
+                    id="licensePlateNumber"
+                    name="licensePlateNumber"
+                    value={formData.licensePlateNumber}
+                    onChange={handleChange}
+                />
+            </div>
+            {errors.licensePlateNumber && <p className="error">{errors.licensePlateNumber}</p>}
             <div className="form-group">
                 <label htmlFor="paymentMethod">Payment Method</label>
                 <select
@@ -71,15 +123,13 @@ function SignupForm({ onSignup }) {
                     name="paymentMethod"
                     value={formData.paymentMethod}
                     onChange={handleChange}
-                    required
                 >
                     <option value="">Select payment method</option>
-                    <option value="visa">Visa</option>
-                    <option value="mastercard">Mastercard</option>
-                    <option value="amex">American Express</option>
+                    <option value="VISA">Visa</option>
+                    <option value="CASH">Cash</option>
                 </select>
             </div>
-
+            {errors.paymentMethod && <p className="error">{errors.paymentMethod}</p>}
             <div className="form-group">
                 <label htmlFor="password">Password</label>
                 <input
@@ -88,10 +138,9 @@ function SignupForm({ onSignup }) {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    required
                 />
             </div>
-
+            {errors.password && <p className="error">{errors.password}</p>}
             <button type="submit" className="auth-button">Sign Up</button>
         </form>
     );
