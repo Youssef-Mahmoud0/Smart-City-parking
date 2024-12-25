@@ -53,7 +53,7 @@
     position: absolute;
     top: 50px;
     right: 0;
-    width: 300px;
+    width: 400px;
     background: white;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);    
@@ -67,7 +67,41 @@
     border-bottom: 1px solid #f1f1f1;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     color: #1a73e8;
     font-size: 15px;
+}
+
+.notification-item .notification-type .penality{
+    font-weight: bold;
+    font-size: 20px;
+    color: red;
+    transform: rotate(-180deg);
+}
+.notification-item .notification-type .confirmation{
+    font-weight: bold;
+    font-size: 20px;
+    color: green;
+}
+.notification-item .notification-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    margin-left: 10px;
+}
+.notification-item .notification-body .notification-message {
+    margin: 0;
+    font-size: 15px;
+}
+.notification-item .notification-body .notification-message.seen {
+    color: black;
+    font-weight: 400;
+}
+
+.notification-item .notification-body .notification-message.unseen {
+    color: #1a73e8;
+    font-weight: bold;
+}
+.notification-item .notification-body .notification-date {
+    font-size: 12px;
 }

@@ -24,4 +24,5 @@ public class DriverRepository {
         List<Driver> result = jdbcTemplate.query(sql, new DriverMapper());
         return result.getFirst();
     }
+
 }

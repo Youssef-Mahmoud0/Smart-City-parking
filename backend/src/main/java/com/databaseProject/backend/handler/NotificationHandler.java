@@ -47,7 +47,7 @@ public class NotificationHandler extends TextWebSocketHandler {
         if (session != null && session.isOpen()) {
             String payload = objectMapper.writeValueAsString(notification);
             session.sendMessage(new TextMessage(payload));
-            System.out.println("Notification sent to driver ID: " + notification.getDriverID());
+//            System.out.println("Notification sent to driver ID: " + notification.getDriverID());
         } else {
             System.err.println("No open session found for driver ID: " + notification.getDriverID());
         }
