@@ -6,16 +6,20 @@ import com.databaseProject.backend.dto.LogInRequest;
 import com.databaseProject.backend.dto.ResponseMessage;
 import com.databaseProject.backend.entity.User;
 import com.databaseProject.backend.service.AuthService;
+import com.databaseProject.backend.service.PasswordService;
 import com.databaseProject.backend.service.TokenService;
 import com.databaseProject.backend.service.UserService;
 import com.databaseProject.backend.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 import com.databaseProject.backend.dto.SignUpRequest;
+
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 @CrossOrigin(origins = "*")
 @RequestMapping("/auth")
@@ -47,9 +51,14 @@ public class AuthController {
         System.out.println("Creating user");
         return userService.createUser(user) ;
     }
+//    @PostMapping("/hash-password")
+//    public void hashPassword(@RequestBody String password) throws NoSuchAlgorithmException {
+//        System.out.println("Hashing password" + password.replaceAll("\"", ""));
+//        System.out.println(authService.hashRawPassword(password.replaceAll("\"", "")));
+//    }
     @CrossOrigin(origins = "*")
     @PostMapping("/signup/driver")
-    public ResponseEntity<?> signUpDriver(@RequestBody SignUpRequest signUpRequest ) {
+    public ResponseEntity<?> signUpDriver(@RequestBody SignUpRequest signUpRequest ) throws NoSuchAlgorithmException {
         System.out.println("welcome from driver signup");
         authService.driverSignUp(signUpRequest);
         System.out.println(signUpRequest.getPassword());
@@ -71,9 +80,9 @@ public class AuthController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/login/driver")
-    public ResponseEntity<?> loginDriver(@RequestBody LogInRequest request, HttpServletResponse response)
-    {
+    public ResponseEntity<?> loginDriver(@RequestBody LogInRequest request, HttpServletResponse response) throws NoSuchAlgorithmException {
         System.out.println("Login Endpoint ");
+        System.out.println(request.getPassword());
         AuthenticationResponse authenticationResponse = authService.driverLogIn(request);
         tokenService.storeTokens(authenticationResponse, response);
         return ResponseEntity.ok().body(authenticationResponse);
@@ -81,8 +90,7 @@ public class AuthController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/login/manager")
-    public ResponseEntity<?> loginManager(@RequestBody LogInRequest request, HttpServletResponse response)
-    {
+    public ResponseEntity<?> loginManager(@RequestBody LogInRequest request, HttpServletResponse response) throws NoSuchAlgorithmException {
         System.out.println("Login Endpoint as Manager");
         AuthenticationResponse authenticationResponse = authService.managerLogIn(request);
         tokenService.storeTokens(authenticationResponse, response);
@@ -91,8 +99,7 @@ public class AuthController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/login/admin")
-    public ResponseEntity<?> loginAdmin(@RequestBody LogInRequest request, HttpServletResponse response)
-    {
+    public ResponseEntity<?> loginAdmin(@RequestBody LogInRequest request, HttpServletResponse response) throws NoSuchAlgorithmException {
         System.out.println("Login Endpoint as Admin");
         AuthenticationResponse authenticationResponse = authService.adminLogIn(request);
         tokenService.storeTokens(authenticationResponse, response);

@@ -11,6 +11,8 @@ function SignupForm({ onSignup }) {
         email: '',
     });
     const [errors, setErrors] = useState({});
+    const [successResponse, setSuccessResponse] = useState("");
+    const [failureResponse, setFailureResponse] = useState("");
 
     const validateData = () => {
         const newErrors = {};
@@ -49,21 +51,32 @@ function SignupForm({ onSignup }) {
         setErrors(newErrors);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit =async (e) => {
         e.preventDefault();
         validateData();
         if (Object.keys(errors).length > 0) return;
-        onSignup(formData);
+        const response = await onSignup(formData);
+        console.log("Response from onSignup:", response);
+        // if (response.success) {
+        //     setSuccessResponse(response.message);
+        //     setFailureResponse("");
+        // } else {
+        //     setFailureResponse(response.message);
+        //     setSuccessResponse("");
+        // }
     };
 
     const handleChange = (e) => {
+        const { name, value } = e.target;
         setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
+          ...formData,
+          [name]: value,
         });
-    };
+        errors[name] && setErrors({ ...errors, [name]: "" });
+      };
 
     return (
+        <>
         <form className="auth-form" onSubmit={handleSubmit}>
             <h2>Driver Sign Up</h2>
 
@@ -143,6 +156,13 @@ function SignupForm({ onSignup }) {
             {errors.password && <p className="error">{errors.password}</p>}
             <button type="submit" className="auth-button">Sign Up</button>
         </form>
+              {
+                successResponse && <p className="success-message">{successResponse}</p>
+              }
+              {
+                failureResponse && <p className="error-message">{failureResponse}</p>
+              }
+    </>
     );
 }
 

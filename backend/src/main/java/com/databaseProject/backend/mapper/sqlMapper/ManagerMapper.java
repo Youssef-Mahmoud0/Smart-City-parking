@@ -12,7 +12,7 @@ public class ManagerMapper implements RowMapper<Manager> {
     @Override
     public Manager mapRow(ResultSet rs, int rowNum) throws SQLException {
         Manager manager = new Manager();
-        manager.setManagerId(rs.getInt("manager_id"));
+        manager.setManagerId(rs.getInt("mgr_id"));
         manager.setName(rs.getString("name"));
         manager.setEmail(rs.getString("email"));
         manager.setPhoneNumber(rs.getString("phone_number"));

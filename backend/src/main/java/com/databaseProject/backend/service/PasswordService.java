@@ -2,21 +2,24 @@ package com.databaseProject.backend.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 @Service
 public class PasswordService {
-
-    private final PasswordEncoder passwordEncoder;
-
-    public PasswordService(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    public String hashPassword(String rawPassword) {
-        return passwordEncoder.encode(rawPassword);
-    }
+        public static String hashPassword(String password) {
+            try {
+                MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                byte[] encodedHash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+                return Base64.getEncoder().encodeToString(encodedHash);
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException("Error initializing SHA-256 algorithm", e);
+            }
+        }
 
     public boolean verifyPassword(String rawPassword, String hashedPassword) {
-        return passwordEncoder.matches(rawPassword, hashedPassword);
+        System.out.println("raw pass hashed"+ hashPassword(rawPassword));
+        return hashPassword(rawPassword).equals(hashedPassword);
     }
 }

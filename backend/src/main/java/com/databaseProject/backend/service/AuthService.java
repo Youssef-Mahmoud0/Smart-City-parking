@@ -15,6 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import com.databaseProject.backend.dto.SignUpRequest;
+
+import java.security.NoSuchAlgorithmException;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -26,7 +29,7 @@ public class AuthService {
         private final ManagerRepository managerRepository;
         private final AdminRepository adminRepository;
 
-        public void driverSignUp(SignUpRequest signUpRequest) {
+        public void driverSignUp(SignUpRequest signUpRequest) throws NoSuchAlgorithmException {
             String password = passwordService.hashPassword(signUpRequest.getPassword());
             signUpRequest.setPassword(password);
             if (driverRepository.findByEmail(signUpRequest.getEmail()).isPresent())
@@ -56,7 +59,7 @@ public class AuthService {
             }
         }
 
-        public AuthenticationResponse driverLogIn(LogInRequest request) {
+        public AuthenticationResponse driverLogIn(LogInRequest request) throws NoSuchAlgorithmException {
             var driver = driverRepository.findByEmail(request.getEmail())
                     .orElseThrow(() -> new InvalidCredentialsException("email or password is incorrect"));
             System.out.println("email found");
@@ -76,7 +79,7 @@ public class AuthService {
                     .build();
         }
 
-        public AuthenticationResponse managerLogIn(LogInRequest request){
+        public AuthenticationResponse managerLogIn(LogInRequest request) throws NoSuchAlgorithmException {
             var manager = managerRepository.findByEmail(request.getEmail())
                     .orElseThrow(() -> new InvalidCredentialsException("email or password is incorrect"));
             System.out.println("email found");
@@ -96,7 +99,7 @@ public class AuthService {
                     .build();
         }
 
-        public AuthenticationResponse adminLogIn(LogInRequest request){
+        public AuthenticationResponse adminLogIn(LogInRequest request) throws NoSuchAlgorithmException {
             var admin = adminRepository.findByEmail(request.getEmail())
                     .orElseThrow(() -> new InvalidCredentialsException("email or password is incorrect"));
             System.out.println("email found");
@@ -115,4 +118,8 @@ public class AuthService {
                     .id(String.valueOf(id))
                     .build();
         }
+
+        public String hashRawPassword(String password) throws NoSuchAlgorithmException {
+            return passwordService.hashPassword(password);
+    }
 }
