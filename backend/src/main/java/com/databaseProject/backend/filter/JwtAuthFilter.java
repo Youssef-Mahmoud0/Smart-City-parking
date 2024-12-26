@@ -17,12 +17,12 @@ import java.util.Optional;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil; // Utility for token operations
-    private final TokenService refreshTokenService; // Service for validating refresh tokens
+    private final TokenService tokenService; // Service for validating refresh tokens
     private final CookieUtil cookieUtil; // Utility for cookie operations
 
-    public JwtAuthFilter(JwtUtil jwtUtil, TokenService refreshTokenService, CookieUtil cookieUtil) {
+    public JwtAuthFilter(JwtUtil jwtUtil, TokenService tokenService, CookieUtil cookieUtil) {
         this.jwtUtil = jwtUtil;
-        this.refreshTokenService = refreshTokenService;
+        this.tokenService = tokenService;
         this.cookieUtil = cookieUtil;
     }
 
@@ -59,6 +59,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             System.out.println("Access token: " + accessTokenCookie);
             if (accessTokenCookie.isPresent() && jwtUtil.validateToken(accessTokenCookie.get().getValue())) {
                 System.out.println("Valid access token");
+                request.setAttribute("id",jwtUtil.getUserIdFromToken(accessTokenCookie.get().getValue()));
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -67,7 +68,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             Optional<Cookie> refreshTokenCookie = Optional.ofNullable(cookieUtil.getCookie(request, "refreshToken"));
             if (refreshTokenCookie.isPresent()) {
                 System.out.println("Valid refresh token. Generating new tokens.");
-                refreshTokenService.createNewTokens(refreshTokenCookie.get().getValue(), response);
+                request.setAttribute("id",jwtUtil.getUserIdFromToken(refreshTokenCookie.get().getValue()));
+
+                tokenService.createNewTokens(refreshTokenCookie.get().getValue(), response);
                 filterChain.doFilter(request, response);
                 return;
             }

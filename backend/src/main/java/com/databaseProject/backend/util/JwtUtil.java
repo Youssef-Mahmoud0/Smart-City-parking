@@ -31,18 +31,18 @@ public class JwtUtil {
         );
     }
 
-    public String generateAccessToken(String username) {
+    public String generateAccessToken(int id) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(String.valueOf(id))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("ACCESS_TOKEN_EXPIRATION"))))
                 .signWith(secretKey)
                 .compact();
     }
 
-    public  String generateRefreshToken(String username) {
+    public  String generateRefreshToken(int id) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(String.valueOf(id))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("REFRESH_TOKEN_EXPIRATION")))
                 )
@@ -94,7 +94,6 @@ public class JwtUtil {
         }
     }
 
-
     public  Boolean validateToken(String token) {
         try {
             Claims claims = Jwts.parserBuilder()
@@ -109,40 +108,18 @@ public class JwtUtil {
             return true;
 
         } catch (Exception e) {
-            // If any exception occurs (malformed token, expired, etc.), return false
+
             return false;
         }
     }
 
-    public  String getUsernameFromRefreshToken(String refreshToken) {
-        return Jwts.parserBuilder()
+    public int getUserIdFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
-                .parseClaimsJws(refreshToken)
-                .getBody()
-                .getSubject();
-    }
-
-
-
-    public String validateResetPasswordToken(String token) {
-        try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            Date expirationDate = claims.getExpiration();
-            if (expirationDate.before(new Date())) {
-                throw new InvalidCredentialsException("Token has expired");
-            }
-            return claims.getSubject();
-        } catch (JwtException e) {
-            throw new InvalidCredentialsException("Invalid or expired token");
-        } catch (IllegalArgumentException e) {
-            throw new InvalidCredentialsException("Token must not be null or empty");
-        }
+                .parseClaimsJws(token)
+                .getBody();
+        return Integer.parseInt(claims.getSubject());
     }
 
     public Key getSecretKey() {

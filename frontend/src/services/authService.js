@@ -1,11 +1,12 @@
   export const handleLogin = async (data) => {
     try {
-      const response = await fetch('http://localhost:8080/auth/login', {
+      const response = await fetch('http://localhost:8080/user/create', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({firstName: "Youssef", lastName: "Khaled"}),
       }); 
       const responseData = await response.json();
       console.log(responseData);

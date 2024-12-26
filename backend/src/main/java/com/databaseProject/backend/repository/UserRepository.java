@@ -32,4 +32,10 @@ public class UserRepository {
         User user = jdbcTemplate.queryForObject(sql, new UserMapper(), email);
         return Optional.ofNullable(user);
     }
+
+    public Optional<User> findByUsername(String username) {
+        String sql = "SELECT * FROM driver WHERE username = ?";
+        User user = jdbcTemplate.queryForObject(sql, new UserMapper(), username);
+        return Optional.ofNullable(user);
+    }
 }

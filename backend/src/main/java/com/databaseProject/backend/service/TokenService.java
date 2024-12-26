@@ -22,10 +22,10 @@ public class TokenService {
 
     public void createNewTokens(String refreshToken,HttpServletResponse response) {
         // Fetch the username from the refresh token
-        String username = jwtUtil.getUsernameFromRefreshToken(refreshToken);
+        int id = jwtUtil.getUserIdFromToken(refreshToken);
         // Generate new access and refresh tokens
-        String newAccessToken = jwtUtil.generateAccessToken(username);
-        String newRefreshToken = jwtUtil.generateRefreshToken(username);
+        String newAccessToken = jwtUtil.generateAccessToken(id);
+        String newRefreshToken = jwtUtil.generateRefreshToken(id);
         // Add the new tokens to the response cookies
         CookieUtil.addCookie(response, "accessToken", newAccessToken);
         CookieUtil.addCookie(response, "refreshToken", newRefreshToken);

@@ -1,8 +1,11 @@
 package com.databaseProject.backend.service;
 
+import com.databaseProject.backend.dto.AuthenticationResponse;
+import com.databaseProject.backend.dto.LogInRequest;
 import com.databaseProject.backend.entity.Driver;
 import com.databaseProject.backend.enums.UserType;
 import com.databaseProject.backend.exception.EmailAlreadyRegisteredException;
+import com.databaseProject.backend.exception.InvalidCredentialsException;
 import com.databaseProject.backend.repository.DriverRepository;
 import com.databaseProject.backend.repository.UserRepository;
 import com.databaseProject.backend.util.JwtUtil;
@@ -47,5 +50,25 @@ public class AuthService {
                 driver.setPaymentMethod(request.getPaymentMethod());
                 driverRepository.save(driver);
             }
+        }
+
+        public AuthenticationResponse driverLogIn(LogInRequest request) {
+            var driver = driverRepository.findByEmail(request.getEmail())
+                    .orElseThrow(() -> new InvalidCredentialsException("email or password is incorrect"));
+            System.out.println("email found");
+            if (!(passwordService.verifyPassword((request.getPassword()), driver.getPassword()))) {
+                throw new InvalidCredentialsException("email or password is incorrect");
+            }
+            System.out.println("password verified");
+            int id = driver.getDriverId();
+            String accessToken = jwtUtil.generateAccessToken(id);
+            String refreshToken = jwtUtil.generateRefreshToken(id);
+
+            return AuthenticationResponse.builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .role("DRIVER")
+                    .id(String.valueOf(id))
+                    .build();
         }
 }

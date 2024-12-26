@@ -6,8 +6,10 @@ import com.databaseProject.backend.dto.LogInRequest;
 import com.databaseProject.backend.dto.ResponseMessage;
 import com.databaseProject.backend.entity.User;
 import com.databaseProject.backend.service.AuthService;
+import com.databaseProject.backend.service.TokenService;
 import com.databaseProject.backend.service.UserService;
 import com.databaseProject.backend.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +31,20 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private TokenService tokenService;
+
 
     @GetMapping("/users")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
-
+    @CrossOrigin(origins = "*")
     @PostMapping("/user/create")
-    public int createUser(@RequestBody User user) {
+    public int createUser(@RequestBody User user, HttpServletRequest request) {
+        Object id = request.getAttribute("id");
+        System.out.println("id: " + id.toString());
+        System.out.println("Creating user");
         return userService.createUser(user) ;
     }
     @CrossOrigin(origins = "*")
@@ -61,16 +69,13 @@ public class AuthController {
         return ResponseEntity.ok().body(responseMessage);
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/login")
-    public ResponseEntity<?> login(
-            @RequestBody LogInRequest request,
-            HttpServletResponse response
-    )
+    public ResponseEntity<?> login(@RequestBody LogInRequest request, HttpServletResponse response)
     {
         System.out.println("Login Endpoint ");
-//        AuthenticationResponse authenticationResponse = authService.login(request);
-//        tokenService.storeTokens(authenticationResponse, response);
-        AuthenticationResponse usernameObject = new AuthenticationResponse();
-        return ResponseEntity.ok().body(usernameObject);
+        AuthenticationResponse authenticationResponse = authService.driverLogIn(request);
+        tokenService.storeTokens(authenticationResponse, response);
+        return ResponseEntity.ok().body(authenticationResponse);
     }
 }
