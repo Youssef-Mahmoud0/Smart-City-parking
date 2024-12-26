@@ -1,5 +1,6 @@
 package com.databaseProject.backend.filter;
 
+import com.databaseProject.backend.exception.InvalidCredentialsException;
 import com.databaseProject.backend.service.TokenService;
 import com.databaseProject.backend.util.CookieUtil;
 import com.databaseProject.backend.util.JwtUtil;
@@ -77,7 +78,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             // If both tokens are invalid, reject the request
             System.out.println("Invalid or expired tokens");
-            throw new Exception("Invalid or expired tokens");
+            throw new InvalidCredentialsException("Invalid or expired tokens." +
+                    "Please login again.");
         } catch (Exception e) {
             System.err.println("Exception occurred in filter: " + e.getMessage());
             e.printStackTrace();

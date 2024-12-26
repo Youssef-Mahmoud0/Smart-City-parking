@@ -1,4 +1,4 @@
-  export const handleLogin = async (data) => {
+  export const handleDriverLogin = async (data) => {
     try {
       const response = await fetch('http://localhost:8080/user/create', {
         method: 'POST',
@@ -34,3 +34,38 @@
       console.log(error);
     }
   }
+
+export const handleManagerLogin = async (data) => {
+  try {
+    const response = await fetch('http://localhost:8080/auth/login/manager', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    const responseData = await response.json();
+    console.log(responseData);
+    return responseData;
+  }
+  catch (error) {
+    console.log(error);
+  }
+}
+export const handleAdminLogin = async (data) => {
+  try {
+    const response = await fetch('http://localhost:8080/auth/login/admin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    const responseData = await response.json();
+    console.log(responseData);
+    return responseData;
+  }
+  catch (error) {
+    console.log(error);
+  }
+}

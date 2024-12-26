@@ -70,11 +70,31 @@ public class AuthController {
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LogInRequest request, HttpServletResponse response)
+    @PostMapping("/login/driver")
+    public ResponseEntity<?> loginDriver(@RequestBody LogInRequest request, HttpServletResponse response)
     {
         System.out.println("Login Endpoint ");
         AuthenticationResponse authenticationResponse = authService.driverLogIn(request);
+        tokenService.storeTokens(authenticationResponse, response);
+        return ResponseEntity.ok().body(authenticationResponse);
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/login/manager")
+    public ResponseEntity<?> loginManager(@RequestBody LogInRequest request, HttpServletResponse response)
+    {
+        System.out.println("Login Endpoint as Manager");
+        AuthenticationResponse authenticationResponse = authService.managerLogIn(request);
+        tokenService.storeTokens(authenticationResponse, response);
+        return ResponseEntity.ok().body(authenticationResponse);
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/login/admin")
+    public ResponseEntity<?> loginAdmin(@RequestBody LogInRequest request, HttpServletResponse response)
+    {
+        System.out.println("Login Endpoint as Admin");
+        AuthenticationResponse authenticationResponse = authService.adminLogIn(request);
         tokenService.storeTokens(authenticationResponse, response);
         return ResponseEntity.ok().body(authenticationResponse);
     }
