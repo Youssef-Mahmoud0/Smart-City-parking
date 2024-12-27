@@ -9,7 +9,7 @@ public class SpotReservationDto {
     private Timestamp startTime;
     private Timestamp endTime;
     private String status;
-    private Timestamp expectedEndTime;
+//    private Timestamp expectedEndTime;
 
     public int getSpotId() {
         return spotId;
@@ -59,11 +59,11 @@ public class SpotReservationDto {
         this.status = status;
     }
 
-    public Timestamp getExpectedEndTime() {
-        return expectedEndTime;
-    }
-
-    public void setExpectedEndTime(Timestamp expectedEndTime) {
-        this.expectedEndTime = expectedEndTime;
-    }
+//    public Timestamp getExpectedEndTime() {
+//        return expectedEndTime;
+//    }
+//
+//    public void setExpectedEndTime(Timestamp expectedEndTime) {
+//        this.expectedEndTime = expectedEndTime;
+//    }
 }

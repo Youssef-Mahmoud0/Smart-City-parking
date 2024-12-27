@@ -20,7 +20,7 @@ public class SpotReservationMapper implements RowMapper<SpotReservationDto> {
         dto.setStartTime(rs.getTimestamp("start_time"));
         dto.setEndTime(rs.getTimestamp("end_time"));
         dto.setStatus(rs.getString("status"));
-        dto.setExpectedEndTime(rs.getTimestamp("expected_end_time"));
+        dto.setEndTime(rs.getTimestamp("end_time"));
         return dto;
     }
 }

@@ -52,16 +52,18 @@ public class ReservationService {
     }
 
     @Transactional
-    public void reserveSpot(int spotId, Timestamp startTime, Timestamp expectedEndTime, int driverId) {
-        validateTimes(startTime, expectedEndTime);
+    public void reserveSpot(int spotId, Timestamp startTime, Timestamp endTime, int driverId) {
+        validateTimes(startTime, endTime);
         boolean isSpotAvailableWithLock = reservationRepository.isSpotAvailableWithLock(spotId);
+        System.out.println("Spot availability: " + isSpotAvailableWithLock);
         if (!isSpotAvailableWithLock) throw new IllegalArgumentException("Spot is not available.");
 
-        boolean isOverlapping = reservationRepository.checkOverlapping(spotId, startTime, expectedEndTime);
+        boolean isOverlapping = reservationRepository.checkOverlapping(spotId, startTime, endTime);
+        System.out.println("Overlapping check: " + isOverlapping);
         if (isOverlapping) throw new IllegalArgumentException("Reservation overlaps with an existing reservation.");
 
         if (driverId == -1) throw new RuntimeException("Driver not logged in.");
-        reservationRepository.createReservation(spotId, startTime, expectedEndTime, driverId);
+        reservationRepository.createReservation(spotId, startTime, endTime, driverId);
     }
 
     @Transactional
@@ -74,16 +76,20 @@ public class ReservationService {
         reservationRepository.completeReservation(spotId, driverId);
     }
 
-    private void validateTimes(Timestamp startTime, Timestamp expectedEndTime) {
-        if (!startTime.before(expectedEndTime)) {
-            throw new IllegalArgumentException("Start time must be before the expected end time.");
+    private void validateTimes(Timestamp startTime, Timestamp endTime) {
+        if (!startTime.before(endTime)) {
+            throw new IllegalArgumentException("Start time must be before the end time.");
         }
         // reservation duration is at least 1h
-        long durationMillis = expectedEndTime.getTime() - startTime.getTime();
+        long durationMillis = endTime.getTime() - startTime.getTime();
         long oneHourMillis = 60 * 60 * 1000;
         if (durationMillis < oneHourMillis) {
             throw new IllegalArgumentException("Minimum reservation duration is 1 hour.");
         }
+    }
+
+    public List<ReservationDto> fetchAllReservationsForSpot(int spotId) {
+        return reservationRepository.getReservationsBySpotId(spotId);
     }
 
 //    public void reserveSpot(int spotId, Timestamp startTime, Timestamp expectedEndTime, int driverId) {

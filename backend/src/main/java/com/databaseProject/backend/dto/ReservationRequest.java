@@ -2,7 +2,7 @@ package com.databaseProject.backend.dto;
 
 public class ReservationRequest {
     private String startTime;
-    private String expectedEndTime;
+    private String endTime;
 
     public String getStartTime() {
         return startTime;
@@ -12,11 +12,11 @@ public class ReservationRequest {
         this.startTime = startTime;
     }
 
-    public String getExpectedEndTime() {
-        return expectedEndTime;
+    public String getEndTime() {
+        return endTime;
     }
 
-    public void setExpectedEndTime(String expectedEndTime) {
-        this.expectedEndTime = expectedEndTime;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

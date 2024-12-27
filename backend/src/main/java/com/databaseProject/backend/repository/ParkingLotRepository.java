@@ -33,7 +33,7 @@ public class ParkingLotRepository {
 
     public List<SpotReservationDto> getSpotReservations(int lotId) {
         String sql = """
-                    SELECT r.reservation_id, ps.spot_id, r.start_time, r.end_time, r.status, r.driver_id, r.expected_end_time
+                    SELECT r.reservation_id, ps.spot_id, r.start_time, r.end_time, r.status, r.driver_id, r.end_time
                     FROM parking_spot ps
                     LEFT JOIN reservation r ON ps.spot_id = r.spot_id
                     WHERE ps.lot_id = ?
@@ -41,5 +41,4 @@ public class ParkingLotRepository {
         """;
         return jdbcTemplate.query(sql, new Object[]{lotId}, new SpotReservationMapper());
     }
-
 }
