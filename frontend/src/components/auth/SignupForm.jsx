@@ -43,7 +43,7 @@ function SignupForm({ onSignup }) {
       newErrors.licensePlateNumber = "License plate is required.";
     } else if (!licensePlateRegex.test(formData.licensePlateNumber)) {
       newErrors.licensePlateNumber =
-        "License plate must follow the format: Arabic characters separated by spaces and Arabic digits separated by spaces (e.g., أ ب ج ١ ٢ ٣ ٤).";
+        "License plate must follow the format: Arabic characters separated by spaces and Arabic digits separated by spaces (e.g., أ ب ج ١٢٣٤).";
     }
     if (!formData.paymentMethod)
       newErrors.paymentMethod = "Payment method is required.";

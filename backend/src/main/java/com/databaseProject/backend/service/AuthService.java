@@ -32,6 +32,7 @@ public class AuthService {
         public void driverSignUp(SignUpRequest signUpRequest) throws NoSuchAlgorithmException {
             String password = passwordService.hashPassword(signUpRequest.getPassword());
             signUpRequest.setPassword(password);
+            System.out.println(signUpRequest.getLicensePlateNumber().length());
             if (driverRepository.findByEmail(signUpRequest.getEmail()).isPresent())
                 throw new EmailAlreadyRegisteredException("Email already exists.");
             System.out.println("Email not found");
