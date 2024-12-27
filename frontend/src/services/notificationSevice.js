@@ -4,7 +4,7 @@ async function getDriverNotifications(driverID) {
     const url = `${backedURL}/driver/notifications?driverID=${driverID}`;
     const response = await fetch(url, {
         method: 'GET',
-        // credentials: 'include',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -22,7 +22,7 @@ async function seeNotifications(driverID) {
     const url = `${backedURL}/driver/notifications/seen?driverID=${driverID}`;
     const response = await fetch(url, {
         method: 'PATCH',
-        // credentials: 'include',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         },

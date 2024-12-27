@@ -4,7 +4,7 @@ async function getManagerLots() {
     const url = `${backedURL}/manager/lots/1`;
     const response = await fetch(url, {
         method: 'GET',
-        // credentials: 'include',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -22,7 +22,7 @@ async function getLotReport(lotId) {
     const url = `${backedURL}/manager/report/${lotId}`;
     const response = await fetch(url, {
         method: 'GET',
-        // credentials: 'include',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         },
