@@ -61,7 +61,7 @@ public class JwtUtil {
                 .claim("plateNumber", request.getLicensePlateNumber())
                 .claim("paymentMethod", request.getPaymentMethod())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 5 * 60 * 1000)) // 5 min expiration
+                .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000)) // 1 hour expiration
                 .signWith(secretKey)
                 .compact();
     }
