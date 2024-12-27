@@ -1,0 +1,48 @@
+.parking-lot-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 500px;
+    margin: 0 auto;
+    margin-top: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.parking-lot-body .lot-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid;
+}
+.parking-lot-body .lot-header .lot-report-button {
+    padding: 10px 20px;
+    background: #1a73e8;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.parking-lot-body h3 {
+    margin: 0;
+    color: #333;
+    padding: 5px 10px;
+    border-bottom: 1px solid;
+}
+
+.parking-lot-body .lot-info {
+    margin-bottom: 20px;
+}
+
+.parking-lot-body .lot-spots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
