@@ -17,8 +17,6 @@ public class ManagerMapper implements RowMapper<Manager> {
         manager.setEmail(rs.getString("email"));
         manager.setPhoneNumber(rs.getString("phone_number"));
         manager.setPassword(rs.getString("password"));
-        manager.setCreatedAt(rs.getTimestamp("created_at"));
-        manager.setUpdatedAt(rs.getTimestamp("updated_at"));
         return manager;
     }
 }
