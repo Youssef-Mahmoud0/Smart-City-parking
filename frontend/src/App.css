@@ -2,27 +2,3 @@
     min-height: 100vh;
     background-color: #f0f2f5;
 }
-
-.app-header {
-    background-color: #1a73e8;
-    color: white;
-    padding: 1rem 2rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.app-header h1 {
-    margin: 0;
-    font-size: 1.5rem;
-}
-
-.app-main {
-    padding: 2rem;
-}
-
-.content-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}

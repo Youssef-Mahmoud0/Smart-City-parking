@@ -16,9 +16,9 @@ public class UserRepository {
     private JdbcTemplate jdbcTemplate;
 
     public int save(User  user) {
-        String sql = "INSERT INTO user (first_name, last_name) VALUES (?, ?)";
+        String sql = "INSERT INTO driver (name) VALUES (?)";
 
-        int rowsAffected = jdbcTemplate.update(sql, user.getFirstName(), user.getLastName());
+        int rowsAffected = jdbcTemplate.update(sql, user.getFirstName());
         return rowsAffected;
     }
 

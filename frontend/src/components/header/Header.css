@@ -3,9 +3,105 @@
     color: white;
     padding: 1rem 2rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .app-header h1 {
     margin: 0;
     font-size: 1.5rem;
+}
+.notification-container {
+    position: relative;
+}
+.notification-container .notification-icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    background: #1a73e8;
+    color: white;
+    position: relative;
+}
+.notification-icon i {
+    font-size: 20px;
+}
+.notification-icon .notification-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-container .notification-list {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    width: 400px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);    
+    z-index: 1;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notification-list .notification-item {
+    padding: 10px;
+    border-bottom: 1px solid #f1f1f1;
+    display: flex;
+    align-items: center;
+    color: #1a73e8;
+    font-size: 15px;
+}
+
+.notification-item .notification-type .penality{
+    font-weight: bold;
+    font-size: 20px;
+    color: red;
+    transform: rotate(-180deg);
+}
+.notification-item .notification-type .confirmation{
+    font-weight: bold;
+    font-size: 20px;
+    color: green;
+}
+.notification-item .notification-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    margin-left: 10px;
+}
+.notification-item .notification-body .notification-message {
+    margin: 0;
+    font-size: 15px;
+}
+.notification-item .notification-body .notification-message.seen {
+    color: black;
+    font-weight: 400;
+}
+
+.notification-item .notification-body .notification-message.unseen {
+    color: #1a73e8;
+    font-weight: bold;
+}
+.notification-item .notification-body .notification-date {
+    font-size: 12px;
 }
