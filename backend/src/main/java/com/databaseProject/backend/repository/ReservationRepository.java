@@ -17,11 +17,11 @@ public class ReservationRepository {
     private JdbcTemplate jdbcTemplate;
 
     // allow reservation if the status is AVAILABLE applying concurrency control (SELECT ... FOR UPDATE)
-    public boolean isSpotAvailableWithLock(int spotId) {
-        String sql = "SELECT status FROM parking_spot WHERE spot_id = ? FOR UPDATE";
-        String status = jdbcTemplate.queryForObject(sql, String.class, spotId);
-        return "AVAILABLE".equals(status);
-    }
+//    public boolean isSpotAvailableWithLock(int spotId) {
+//        String sql = "SELECT status FROM parking_spot WHERE spot_id = ? FOR UPDATE";
+//        String status = jdbcTemplate.queryForObject(sql, String.class, spotId);
+//        return "AVAILABLE".equals(status);
+//    }
 
     public boolean checkOverlapping(int spotId, Timestamp startTime, Timestamp endTime) {
         String sql = "SELECT COUNT(*) FROM reservation WHERE spot_id = ? AND status IN ('WAITING_FOR_ARRIVAL', 'DRIVER_ARRIVED') AND (start_time < ? AND end_time > ?)";

@@ -54,9 +54,9 @@ public class ReservationService {
     @Transactional
     public void reserveSpot(int spotId, Timestamp startTime, Timestamp endTime, int driverId) {
         validateTimes(startTime, endTime);
-        boolean isSpotAvailableWithLock = reservationRepository.isSpotAvailableWithLock(spotId);
-        System.out.println("Spot availability: " + isSpotAvailableWithLock);
-        if (!isSpotAvailableWithLock) throw new IllegalArgumentException("Spot is not available.");
+//        boolean isSpotAvailableWithLock = reservationRepository.isSpotAvailableWithLock(spotId);
+//        System.out.println("Spot availability: " + isSpotAvailableWithLock);
+//        if (!isSpotAvailableWithLock) throw new IllegalArgumentException("Spot is not available.");
 
         boolean isOverlapping = reservationRepository.checkOverlapping(spotId, startTime, endTime);
         System.out.println("Overlapping check: " + isOverlapping);
