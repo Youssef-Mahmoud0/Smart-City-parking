@@ -3,12 +3,26 @@ package com.databaseProject.backend.dto;
 import com.databaseProject.backend.enums.SpotStatus;
 import com.databaseProject.backend.enums.SpotType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ParkingSpotDto {
     private int spotId;
     private int lotId;
     private SpotType type;
     private SpotStatus status;
     private short order;
+    private List<SpotReservationDto> reservations = new ArrayList<>();
+
+
+    public List<SpotReservationDto> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<SpotReservationDto> reservations) {
+        this.reservations = reservations;
+    }
+
 
     public int getSpotId() {
         return spotId;

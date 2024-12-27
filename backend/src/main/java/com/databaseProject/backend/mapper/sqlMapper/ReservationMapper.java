@@ -1,7 +1,6 @@
 package com.databaseProject.backend.mapper.sqlMapper;
 
 import com.databaseProject.backend.dto.ReservationDto;
-import com.databaseProject.backend.entity.Reservation;
 import com.databaseProject.backend.enums.ReservationStatus;
 import org.springframework.jdbc.core.RowMapper;
 

@@ -3,6 +3,7 @@ package com.databaseProject.backend.repository;
 import com.databaseProject.backend.dto.ReservationDto;
 import com.databaseProject.backend.mapper.sqlMapper.ReservationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +16,20 @@ public class ReservationRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    // allow reservation if the status is AVAILABLE applying concurrency control (SELECT ... FOR UPDATE)
+    public boolean isSpotAvailableWithLock(int spotId) {
+        String sql = "SELECT status FROM parking_spot WHERE spot_id = ? FOR UPDATE";
+        String status = jdbcTemplate.queryForObject(sql, String.class, spotId);
+        return "AVAILABLE".equals(status);
+    }
+
+    public boolean checkOverlapping(int spotId, Timestamp startTime, Timestamp expectedEndTime) {
+        String sql = "SELECT COUNT(*) FROM reservation WHERE spot_id = ? AND status IN ('WAITING_FOR_ARRIVAL', 'DRIVER_ARRIVED') AND (start_time < ? AND expected_end_time > ?)";
+        int overlappingReservations =  jdbcTemplate.queryForObject(sql, Integer.class, spotId, expectedEndTime, startTime);
+
+        return (overlappingReservations > 0);
+    }
+
     public void createReservation(int spotId, Timestamp startTime, Timestamp expectedEndTime, int driverId) {
         // status ????????
         String reservationSql = "INSERT INTO reservation (spot_id, start_time, expected_end_time, driver_id, status) VALUES (?, ?, ?, ?, ?)";
@@ -24,14 +39,10 @@ public class ReservationRepository {
         jdbcTemplate.update(updateSpotStatusSql, spotId);
     }
 
-    // allow reservation if the status is AVAILABLE
-    public boolean isSpotAvailable(int spotId) {
-        String sql = "SELECT status FROM parking_spot WHERE spot_id = ?";
-        String status = jdbcTemplate.queryForObject(sql, String.class, spotId);
-        return "AVAILABLE".equals(status);
-    }
-
     public void cancelReservation(int spotId, int driverId) {
+        String lockSql = "SELECT status FROM parking_spot WHERE spot_id = ? FOR UPDATE";
+        jdbcTemplate.queryForObject(lockSql, String.class, spotId);
+
         String cancelReservationSql = "UPDATE reservation SET status = 'CANCELLED' WHERE spot_id = ? AND driver_id = ?";
         jdbcTemplate.update(cancelReservationSql, spotId, driverId);
 
@@ -40,6 +51,9 @@ public class ReservationRepository {
     }
 
     public void completeReservation(int spotId, int driverId) {
+        String lockSql = "SELECT status FROM parking_spot WHERE spot_id = ? FOR UPDATE";
+        jdbcTemplate.queryForObject(lockSql, String.class, spotId);
+
         String completeReservationSql = "UPDATE reservation SET status = 'COMPLETED' WHERE spot_id = ? AND driver_id = ?";
         jdbcTemplate.update(completeReservationSql, spotId, driverId);
 
