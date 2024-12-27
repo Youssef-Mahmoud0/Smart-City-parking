@@ -43,13 +43,13 @@ public class NotificationHandler extends TextWebSocketHandler {
     }
 
     public void sendNotification(Notification notification) throws Exception {
-        WebSocketSession session = sessions.get(notification.getDriverID());
+        WebSocketSession session = sessions.get(notification.getDriverId());
         if (session != null && session.isOpen()) {
             String payload = objectMapper.writeValueAsString(notification);
             session.sendMessage(new TextMessage(payload));
 //            System.out.println("Notification sent to driver ID: " + notification.getDriverID());
         } else {
-            System.err.println("No open session found for driver ID: " + notification.getDriverID());
+            System.err.println("No open session found for driver ID: " + notification.getDriverId());
         }
     }
 }
