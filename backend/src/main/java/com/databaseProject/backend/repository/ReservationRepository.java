@@ -16,24 +16,20 @@ public class ReservationRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    // allow reservation if the status is AVAILABLE applying concurrency control (SELECT ... FOR UPDATE)
-//    public boolean isSpotAvailableWithLock(int spotId) {
-//        String sql = "SELECT status FROM parking_spot WHERE spot_id = ? FOR UPDATE";
-//        String status = jdbcTemplate.queryForObject(sql, String.class, spotId);
-//        return "AVAILABLE".equals(status);
-//    }
-
     public boolean checkOverlapping(int spotId, Timestamp startTime, Timestamp endTime) {
-        String sql = "SELECT COUNT(*) FROM reservation WHERE spot_id = ? AND status IN ('WAITING_FOR_ARRIVAL', 'DRIVER_ARRIVED') AND (start_time < ? AND end_time > ?)";
+        String sql = "SELECT COUNT(*) FROM reservation " +
+                     "WHERE spot_id = ? " +
+                     "AND status IN ('WAITING_FOR_ARRIVAL', 'DRIVER_ARRIVED') " +
+                     "AND (start_time < ? AND end_time > ?)";
         int overlappingReservations =  jdbcTemplate.queryForObject(sql, Integer.class, spotId, endTime, startTime);
 
         return (overlappingReservations > 0);
     }
 
+    // price is a placeholder for now
     public void createReservation(int spotId, Timestamp startTime, Timestamp endTime, int driverId) {
-        // status ????????
-        String reservationSql = "INSERT INTO reservation (spot_id, start_time, end_time, driver_id, status) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(reservationSql, spotId, startTime, endTime, driverId, "WAITING_FOR_ARRIVAL");
+        String reservationSql = "INSERT INTO reservation (spot_id, start_time, end_time, driver_id, status, price) VALUES (?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(reservationSql, spotId, startTime, endTime, driverId, "WAITING_FOR_ARRIVAL", 0.0);
 
         String updateSpotStatusSql = "UPDATE parking_spot SET status = 'RESERVED' WHERE spot_id = ?";
         jdbcTemplate.update(updateSpotStatusSql, spotId);

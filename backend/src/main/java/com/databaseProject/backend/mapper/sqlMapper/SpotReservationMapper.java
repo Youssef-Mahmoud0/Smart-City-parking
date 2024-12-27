@@ -15,12 +15,13 @@ public class SpotReservationMapper implements RowMapper<SpotReservationDto> {
 
         SpotReservationDto dto = new SpotReservationDto();
         dto.setSpotId(rs.getInt("spot_id"));
-        dto.setReservationId(rs.getInt("reservation_id"));
         dto.setDriverId(rs.getInt("driver_id"));
         dto.setStartTime(rs.getTimestamp("start_time"));
         dto.setEndTime(rs.getTimestamp("end_time"));
         dto.setStatus(rs.getString("status"));
-        dto.setEndTime(rs.getTimestamp("end_time"));
+        dto.setPrice(rs.getDouble("price"));
+        dto.setPenalty(rs.getDouble("penalty"));
+
         return dto;
     }
 }

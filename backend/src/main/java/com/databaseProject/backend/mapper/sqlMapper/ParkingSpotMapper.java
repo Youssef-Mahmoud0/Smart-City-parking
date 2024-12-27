@@ -17,7 +17,6 @@ public class ParkingSpotMapper implements RowMapper<ParkingSpotDto> {
         parkingSpotDto.setLotId(rs.getInt("lot_id"));
         parkingSpotDto.setStatus(SpotStatus.valueOf(rs.getString("status")));
         parkingSpotDto.setType(SpotType.valueOf(rs.getString("type")));
-        parkingSpotDto.setOrder(rs.getShort("order"));
 
         return parkingSpotDto;
     }

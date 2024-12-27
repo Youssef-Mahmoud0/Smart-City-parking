@@ -27,13 +27,13 @@ public class ParkingLotRepository {
     }
 
     public List<ParkingSpotDto> getAllSpots(int lotId) {
-        String sql = "SELECT * FROM parking_spot WHERE lot_id = ? ORDER BY `order`";
+        String sql = "SELECT * FROM parking_spot WHERE lot_id = ? ORDER BY spot_id";
         return jdbcTemplate.query(sql, new Object[]{lotId}, new ParkingSpotMapper());
     }
 
     public List<SpotReservationDto> getSpotReservations(int lotId) {
         String sql = """
-                    SELECT r.reservation_id, ps.spot_id, r.start_time, r.end_time, r.status, r.driver_id, r.end_time
+                    SELECT ps.spot_id, r.start_time, r.end_time, r.status, r.driver_id, r.price, r.penalty
                     FROM parking_spot ps
                     LEFT JOIN reservation r ON ps.spot_id = r.spot_id
                     WHERE ps.lot_id = ?
