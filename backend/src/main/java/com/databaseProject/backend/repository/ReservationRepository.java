@@ -23,17 +23,17 @@ public class ReservationRepository {
         return "AVAILABLE".equals(status);
     }
 
-    public boolean checkOverlapping(int spotId, Timestamp startTime, Timestamp expectedEndTime) {
-        String sql = "SELECT COUNT(*) FROM reservation WHERE spot_id = ? AND status IN ('WAITING_FOR_ARRIVAL', 'DRIVER_ARRIVED') AND (start_time < ? AND expected_end_time > ?)";
-        int overlappingReservations =  jdbcTemplate.queryForObject(sql, Integer.class, spotId, expectedEndTime, startTime);
+    public boolean checkOverlapping(int spotId, Timestamp startTime, Timestamp endTime) {
+        String sql = "SELECT COUNT(*) FROM reservation WHERE spot_id = ? AND status IN ('WAITING_FOR_ARRIVAL', 'DRIVER_ARRIVED') AND (start_time < ? AND end_time > ?)";
+        int overlappingReservations =  jdbcTemplate.queryForObject(sql, Integer.class, spotId, endTime, startTime);
 
         return (overlappingReservations > 0);
     }
 
-    public void createReservation(int spotId, Timestamp startTime, Timestamp expectedEndTime, int driverId) {
+    public void createReservation(int spotId, Timestamp startTime, Timestamp endTime, int driverId) {
         // status ????????
-        String reservationSql = "INSERT INTO reservation (spot_id, start_time, expected_end_time, driver_id, status) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(reservationSql, spotId, startTime, expectedEndTime, driverId, "WAITING_FOR_ARRIVAL");
+        String reservationSql = "INSERT INTO reservation (spot_id, start_time, end_time, driver_id, status) VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(reservationSql, spotId, startTime, endTime, driverId, "WAITING_FOR_ARRIVAL");
 
         String updateSpotStatusSql = "UPDATE parking_spot SET status = 'RESERVED' WHERE spot_id = ?";
         jdbcTemplate.update(updateSpotStatusSql, spotId);
@@ -66,4 +66,8 @@ public class ReservationRepository {
         return jdbcTemplate.query(getReservationsSql, new Object[]{driverId}, new ReservationMapper());
     }
 
+    public List<ReservationDto> getReservationsBySpotId(int spotId) {
+        String getReservationsSql = "SELECT * FROM reservation WHERE spot_id = ?";
+        return jdbcTemplate.query(getReservationsSql, new Object[]{spotId}, new ReservationMapper());
+    }
 }

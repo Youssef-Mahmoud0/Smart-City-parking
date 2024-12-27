@@ -15,5 +15,5 @@ public class Reservation {
     private Timestamp startTime;
     private Timestamp endTime;
     private ReservationStatus status;
-    private Timestamp expectedEndTime;
+//    private Timestamp expectedEndTime;
 }

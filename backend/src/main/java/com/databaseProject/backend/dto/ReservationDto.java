@@ -11,7 +11,7 @@ public class ReservationDto {
     private Timestamp startTime;
     private Timestamp endTime;
     private ReservationStatus status;
-    private Timestamp expectedEndTime;
+//    private Timestamp expectedEndTime;
 
     public int getReservationId() {
         return reservationId;
@@ -61,11 +61,11 @@ public class ReservationDto {
         this.status = status;
     }
 
-    public Timestamp getExpectedEndTime() {
-        return expectedEndTime;
-    }
-
-    public void setExpectedEndTime(Timestamp expectedEndTime) {
-        this.expectedEndTime = expectedEndTime;
-    }
+//    public Timestamp getExpectedEndTime() {
+//        return expectedEndTime;
+//    }
+//
+//    public void setExpectedEndTime(Timestamp expectedEndTime) {
+//        this.expectedEndTime = expectedEndTime;
+//    }
 }
