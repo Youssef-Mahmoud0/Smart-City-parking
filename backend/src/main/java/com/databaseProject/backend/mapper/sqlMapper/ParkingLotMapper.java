@@ -14,6 +14,7 @@ public class ParkingLotMapper implements RowMapper<ParkingLotDto> {
         ParkingLotDto parkingLotDto = new ParkingLotDto();
         parkingLotDto.setLotId(rs.getInt("lot_id"));
         parkingLotDto.setMgrId(rs.getInt("mgr_id"));
+        parkingLotDto.setName(rs.getString("name"));
         parkingLotDto.setLatitude(rs.getDouble("latitude"));
         parkingLotDto.setLongitude(rs.getDouble("longitude"));
         parkingLotDto.setCapacity(rs.getInt("capacity"));

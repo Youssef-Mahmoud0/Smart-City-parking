@@ -3,6 +3,19 @@ package com.databaseProject.backend.dto;
 public class ParkingLotDto {
     private int lotId;
     private int mgrId;
+    private String name;
+    private double latitude;
+    private double longitude;
+    private int capacity;
+    private double basePrice;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public double getLatitude() {
         return latitude;
@@ -19,11 +32,6 @@ public class ParkingLotDto {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
-
-    private double latitude;
-    private double longitude;
-    private int capacity;
-    private double basePrice;
 
     public int getLotId() {
         return lotId;

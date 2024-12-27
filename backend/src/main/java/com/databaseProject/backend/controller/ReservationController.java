@@ -3,10 +3,10 @@ package com.databaseProject.backend.controller;
 import com.databaseProject.backend.dto.ParkingLotDto;
 import com.databaseProject.backend.dto.ParkingSpotDto;
 import com.databaseProject.backend.dto.ReservationDto;
-import com.databaseProject.backend.dto.ReservationRequest;
 import com.databaseProject.backend.service.ReservationService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,10 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
-
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<String> handleDatabaseException(DataAccessException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Database error: " + ex.getMessage());
+    }
 
     @GetMapping("/lots")
     public ResponseEntity<?> fetchAllLots() {
@@ -35,10 +38,10 @@ public class ReservationController {
 
     @GetMapping("/lot/{lotId}/spots")
     public ResponseEntity<?> fetchAllSpotsForLot(@PathVariable int lotId) {
-        List<ParkingSpotDto> result = reservationService.fetchAllSpotsForLot(lotId);
-        if(!result.isEmpty()){
+        try {
+            List<ParkingSpotDto> result = reservationService.fetchAllSpotsForLot(lotId);
             return ResponseEntity.status(HttpStatus.OK).body(result);
-        } else {
+        } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to fetch spots.");
         }
     }
@@ -95,6 +98,7 @@ public class ReservationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
 
 //    @PostMapping("/{driverId}/spots/{spotId}/reserve")
 //    public ResponseEntity<?> reserveSpot(@PathVariable int spotId,
