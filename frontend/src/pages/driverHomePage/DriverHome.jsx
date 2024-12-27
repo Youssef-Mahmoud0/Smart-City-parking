@@ -53,12 +53,6 @@ function DriverHome() {
 
     }
 
-
-    const getSpotReservations = async (spot) => {
-        
-    }
-
-
     return (
         <div className="driver-home">
             <Header title={"Driver"} />

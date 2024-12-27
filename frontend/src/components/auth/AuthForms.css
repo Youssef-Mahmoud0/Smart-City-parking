@@ -59,19 +59,21 @@
     background-color: #ccc;
     cursor: not-allowed;
 }
+
 .error {
     color: red;
     font-size: 0.9rem;
     margin-top: 0.5rem;
 }
+
 .success-message {
     color: green;
     font-size: 0.85rem;
     text-align: center;
-  }
-  
-  .error-message {
+}
+
+.error-message {
     color: red;
     font-size: 0.85rem;
     text-align: center;
-  }
+}
