@@ -1,9 +1,7 @@
 package com.databaseProject.backend.controller;
 
 
-import com.databaseProject.backend.dto.AuthenticationResponse;
-import com.databaseProject.backend.dto.LogInRequest;
-import com.databaseProject.backend.dto.ResponseMessage;
+import com.databaseProject.backend.dto.*;
 import com.databaseProject.backend.entity.User;
 import com.databaseProject.backend.service.AuthService;
 import com.databaseProject.backend.service.PasswordService;
@@ -17,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
-import com.databaseProject.backend.dto.SignUpRequest;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -51,11 +48,11 @@ public class AuthController {
         System.out.println("Creating user");
         return userService.createUser(user) ;
     }
-//    @PostMapping("/hash-password")
-//    public void hashPassword(@RequestBody String password) throws NoSuchAlgorithmException {
-//        System.out.println("Hashing password" + password.replaceAll("\"", ""));
-//        System.out.println(authService.hashRawPassword(password.replaceAll("\"", "")));
-//    }
+    @PostMapping("/hash-password")
+    public void hashPassword(@RequestBody String password) throws NoSuchAlgorithmException {
+        System.out.println("Hashing password" + password);
+        System.out.println(authService.hashRawPassword(password));
+    }
     @CrossOrigin(origins = "*")
     @PostMapping("/signup/driver")
     public ResponseEntity<?> signUpDriver(@RequestBody SignUpRequest signUpRequest ) throws NoSuchAlgorithmException {
@@ -85,7 +82,9 @@ public class AuthController {
         System.out.println(request.getPassword());
         AuthenticationResponse authenticationResponse = authService.driverLogIn(request);
         tokenService.storeTokens(authenticationResponse, response);
-        return ResponseEntity.ok().body(authenticationResponse);
+        AuthenticationResponse objectToReturn = new AuthenticationResponse();
+        objectToReturn.setId(authenticationResponse.getId());
+        return ResponseEntity.ok().body(objectToReturn);
     }
 
     @CrossOrigin(origins = "*")
@@ -94,7 +93,9 @@ public class AuthController {
         System.out.println("Login Endpoint as Manager");
         AuthenticationResponse authenticationResponse = authService.managerLogIn(request);
         tokenService.storeTokens(authenticationResponse, response);
-        return ResponseEntity.ok().body(authenticationResponse);
+        AuthenticationResponse objectToReturn = new AuthenticationResponse();
+        objectToReturn.setId(authenticationResponse.getId());
+        return ResponseEntity.ok().body(objectToReturn);
     }
 
     @CrossOrigin(origins = "*")
@@ -103,6 +104,25 @@ public class AuthController {
         System.out.println("Login Endpoint as Admin");
         AuthenticationResponse authenticationResponse = authService.adminLogIn(request);
         tokenService.storeTokens(authenticationResponse, response);
-        return ResponseEntity.ok().body(authenticationResponse);
+        AuthenticationResponse objectToReturn = new AuthenticationResponse();
+        objectToReturn.setId(authenticationResponse.getId());
+        return ResponseEntity.ok().body(objectToReturn);
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/testSimulation")
+    public ResponseEntity<?> testSimulation(@RequestBody TestSimulation request) {
+        System.out.println("Test Simulation");
+        System.out.println(request.getLotId());
+        System.out.println(request.getSpotNumber());
+        System.out.println(request.getStartTime());
+        System.out.println(request.getEndTime());
+        if (request.getLotId() == 1 && request.getSpotNumber() == 1) {
+            return ResponseEntity.ok().body(new ResponseMessage("Success"));
+        }
+        else {
+            return ResponseEntity.badRequest().body(new ResponseMessage("Error"));
+        }
+
     }
 }

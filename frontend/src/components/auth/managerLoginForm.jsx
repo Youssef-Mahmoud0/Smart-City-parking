@@ -6,34 +6,18 @@ function LoginForm({ onLogin }) {
         email: '',
         password: '',
     });
-        const [successResponse, setSuccessResponse] = useState("");
-        const [failureResponse, setFailureResponse] = useState("");
+
         const [errors, setErrors] = useState({});
-        const handleSubmit = async (e) => {
-            setFailureResponse("");
-            setSuccessResponse("");
-            e.preventDefault();
-            validateData();
-            if (Object.keys(errors).length > 0) return;
-          
-            try {
-              const response = await onLogin(formData); // Call the parent function
-              if (response.success) {
-                console.log("Login successful:", response.type);
-                setSuccessResponse("Login successful.");
-              } else {
-                setFailureResponse(response.message);
-              }
-            } catch (error) {
-              console.error("Error during login:", error);
-              setErrors({ general: "An unexpected error occurred." });
-            }
-          };
-          
+        
+        const handleSubmit =async (e) => {
+        e.preventDefault();
+        validateData();
+        if (Object.keys(errors).length > 0) return;
+        const res =  onLogin(formData);
+        console.log("Response from onLogin:", res);
+    };
 
     const handleChange = (e) => {
-        setFailureResponse("");
-        setSuccessResponse("");
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
@@ -52,7 +36,6 @@ function LoginForm({ onLogin }) {
     };
 
     return (
-        <>
         <form className="auth-form" onSubmit={handleSubmit}>
             <h2>Log In</h2>
             <div className="form-group">
@@ -79,11 +62,7 @@ function LoginForm({ onLogin }) {
             </div>
             {errors.password && <p className="error">{errors.password}</p>}
             <button type="submit" className="auth-button">Log In</button>
-            {successResponse && <p className="success-message">{successResponse}</p>}
-            {failureResponse && <p className="error-message">{failureResponse}</p>}
         </form>
-
-        </>
     );
 }
 

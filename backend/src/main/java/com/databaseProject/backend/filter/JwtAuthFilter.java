@@ -34,7 +34,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         System.out.println("Path: " + path);
 
         // Skip validation for /auth/** paths
-        if (path.startsWith("/auth")) {
+        if (path.startsWith("/auth") || path.startsWith("")) {
             System.out.println("Skipping filter for /auth paths");
             filterChain.doFilter(request, response);
             return;
