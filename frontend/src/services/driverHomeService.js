@@ -5,7 +5,7 @@ export async function fetchParkingLots() {
     const response = await fetch(`${url}/lots`,
     {
         method: 'GET',
-        // credentials: 'include',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         }
@@ -26,7 +26,7 @@ export async function fetchParkingSpots(lotId) {
     const response = await fetch(`${url}/lot/${lotId}/spots`,
     {
         method: 'GET',
-        // credentials: 'include',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         }
@@ -52,7 +52,7 @@ export async function reserveSpot(spotId, startTime, endTime) {
     const response = await fetch(`${url}/1/spots/${spotId}/reserve`,
     {
         method: 'POST',
-        // credentials: 'include',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -77,7 +77,7 @@ export async function fetchSpotReservations(spotId) {
     const response = await fetch(`${url}/spots/${spotId}/reservations`,
     {
         method: 'GET',
-        // credentials: 'include',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json',
         }
