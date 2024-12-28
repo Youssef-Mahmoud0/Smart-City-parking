@@ -70,13 +70,13 @@ END$$
 CREATE PROCEDURE get_dynamic_spot_price(
     IN lot_id INT,
     IN reservation_start_time DATETIME,
-    IN reservation_end_time DATETIME,
-    OUT dynamic_price DECIMAL(6, 3)
+    IN reservation_end_time DATETIME
 )
 BEGIN
     DECLARE base_price DECIMAL(6, 3);
     DECLARE demand_factor DECIMAL(6, 3);
     DECLARE time_factor DECIMAL(6, 3);
+	DECLARE dynamic_price DECIMAL(6, 3);
 
     -- Get base price of the lot
     SELECT pl.base_price INTO base_price
@@ -101,6 +101,7 @@ BEGIN
 
     -- Calculate dynamic price
     SET dynamic_price = base_price * demand_factor * time_factor;
+    SELECT dynamic_price;
 END$$
 
 

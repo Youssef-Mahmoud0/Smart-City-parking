@@ -1,9 +1,11 @@
 package com.databaseProject.backend.dto;
 
+import com.databaseProject.backend.entity.Driver;
 import com.databaseProject.backend.enums.ReservationStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class ReservationDto {
     public int getSpotId() {
@@ -86,6 +88,22 @@ public class ReservationDto {
         this.reservationId = reservationId;
     }
 
+
+    public int getLotId() {
+        return lotId;
+    }
+
+    public void setLotId(int lotId) {
+        this.lotId = lotId;
+    }
+
+    public DriverDto getDriver() {
+        return driver;
+    }
+
+    public void setDriver(DriverDto driver) {
+        this.driver = driver;
+    }
     private int reservationId;
     private int spotId;
     private int driverId;
@@ -98,4 +116,6 @@ public class ReservationDto {
     private double penalty;
     private String strStartTime;
     private String strEndTime;
+    private int lotId;
+    private DriverDto driver;
 }

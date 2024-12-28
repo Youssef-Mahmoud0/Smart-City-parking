@@ -12,5 +12,6 @@ public class DriverDto {
     private String phoneNumber;
     private PaymentType paymentMethod;
     private double penalty;
+    private String password;
 
 }
