@@ -3,6 +3,7 @@ package com.databaseProject.backend.repository;
 import com.databaseProject.backend.dto.ReservationDto;
 import com.databaseProject.backend.dto.SpotReservationDto;
 import com.databaseProject.backend.mapper.sqlMapper.ReservationMapper;
+import com.databaseProject.backend.mapper.sqlMapper.ReservationWithDriverMapper;
 import com.databaseProject.backend.mapper.sqlMapper.SpotReservationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -67,4 +68,23 @@ public class ReservationRepository {
         String getReservationsSql = "SELECT * FROM reservation WHERE spot_id = ?";
         return jdbcTemplate.query(getReservationsSql, new Object[]{spotId}, new ReservationMapper());
     }
+
+    public List<ReservationDto> getReservationsWithDriversBySpotId(int spotId) {
+        String sql = """
+        SELECT
+            r.spot_id, r.lot_id, r.driver_id, r.start_time, r.end_time, r.status, r.price, r.penalty,
+            d.driver_id, d.license_plate_number, d.name, d.email, d.phone_number, d.payment_method, d.password
+        FROM
+            reservation r
+        JOIN
+            driver d
+        ON
+            r.driver_id = d.driver_id
+        WHERE
+            r.spot_id = ?;
+    """;
+
+        return jdbcTemplate.query(sql, new Object[]{spotId}, new ReservationWithDriverMapper());
+    }
+
 }

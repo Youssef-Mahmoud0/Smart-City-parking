@@ -16,6 +16,16 @@ public class ReservationDto {
     private ReservationStatus status;
     private double price;
     private double penalty;
+    private DriverDto driver;
+
+
+    public DriverDto getDriver() {
+        return driver;
+    }
+
+    public void setDriver(DriverDto driver) {
+        this.driver = driver;
+    }
 
     public int getSpotId() {
         return spotId;
