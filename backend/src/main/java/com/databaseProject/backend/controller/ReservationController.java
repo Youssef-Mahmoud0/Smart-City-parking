@@ -1,6 +1,9 @@
 package com.databaseProject.backend.controller;
 
-import com.databaseProject.backend.dto.*;
+import com.databaseProject.backend.dto.ParkingLotDto;
+import com.databaseProject.backend.dto.ParkingSpotDto;
+import com.databaseProject.backend.dto.ReservationDto;
+import com.databaseProject.backend.dto.ReservationRequest;
 import com.databaseProject.backend.service.ReservationService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 
 @CrossOrigin
@@ -43,33 +48,45 @@ public class ReservationController {
             List<ParkingSpotDto> result = reservationService.fetchAllSpotsForLot(lotId);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to fetch spots.");
         }
     }
 
-    @PostMapping("/{lotId}/{driverId}/spots/{spotId}/reserve")
+    @PostMapping("{lotId}/spots/{spotId}/reserve")
     public ResponseEntity<?> reserveSpot(@PathVariable int spotId,
                                          @PathVariable int lotId,
                                          @RequestBody ReservationRequest reservationRequest,
-                                         @PathVariable int driverId,
                                          HttpServletRequest request) {
+//        System.out.println("Reserve spot request received.");
+//        System.out.println("Spot ID: " + spotId);
+//        System.out.println("Driver ID: " + driverId);
+//        System.out.println("Start time: " + reservationRequest.getStartTime());
+//        System.out.println("End time: " + reservationRequest.getEndTime());
+
         try {
+            int driverId = (int) request.getAttribute("id");
+            System.out.println("Driver ID: " + driverId);
+
             Timestamp startTime = Timestamp.valueOf(reservationRequest.getStartTime());
             Timestamp endTime = Timestamp.valueOf(reservationRequest.getEndTime());
-            reservationService.reserveSpot(lotId,spotId, startTime, endTime, driverId);
+
+            reservationService.reserveSpot(lotId, spotId, startTime, endTime, driverId);
             return ResponseEntity.status(HttpStatus.OK).body("Spot reserved successfully.");
         } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
-    @PostMapping("/spots/{spotId}/cancel")
-    public ResponseEntity<?> cancelSpot(@PathVariable int spotId, @PathVariable int driverId, HttpServletRequest request) {
+    @PostMapping("/{reservationId}/spots/{spotId}/cancel")
+    public ResponseEntity<?> cancelSpot(@PathVariable int reservationId, @PathVariable int spotId, HttpServletRequest request) {
         try {
-//            int driverId = (int) request.getAttribute("id");
-            reservationService.cancelReservation(spotId, driverId);
+            int driverId = (int) request.getAttribute("id");
+            reservationService.cancelReservation(reservationId, spotId, driverId);
             return ResponseEntity.status(HttpStatus.OK).body("Reservation cancelled successfully.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -78,11 +95,11 @@ public class ReservationController {
         }
     }
 
-    @PostMapping("/spots/{spotId}/complete")
-    public ResponseEntity<?> completeSpot(@PathVariable int spotId, @PathVariable int driverId, HttpServletRequest request) {
+    @PostMapping("/{reservationId}/spots/{spotId}/complete")
+    public ResponseEntity<?> completeSpot(@PathVariable int reservationId, @PathVariable int spotId, HttpServletRequest request) {
         try {
-//            int driverId = (int) request.getAttribute("id");
-            reservationService.completeReservation(spotId, driverId);
+            int driverId = (int) request.getAttribute("id");
+            reservationService.completeReservation(reservationId, spotId, driverId);
             return ResponseEntity.status(HttpStatus.OK).body("Spot completed successfully.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -91,11 +108,18 @@ public class ReservationController {
         }
     }
 
-    @GetMapping("/{driverId}/reservations")
-    public ResponseEntity<?> fetchAllReservationsForDriver(@PathVariable int driverId, HttpServletRequest request) {
+    @GetMapping("/reservations")
+    public ResponseEntity<?> fetchAllReservationsForDriver(HttpServletRequest request) {
         try {
-//            int driverId = (int) request.getAttribute("id");
-            List<ReservationDto> result = reservationService.fetchAllReservations(driverId);
+            int driverId = (int) request.getAttribute("id");
+
+            System.out.println("getting reservations for driver: " + driverId);
+
+            List<ReservationDto> result = reservationService.fetchAllReservationsAfterNow(driverId);
+            for (ReservationDto reservation : result) {
+                reservation.setStrStartTime(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(reservation.getStartTime()));
+                reservation.setStrEndTime(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(reservation.getEndTime()));
+            }
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -106,33 +130,43 @@ public class ReservationController {
     public ResponseEntity<?> fetchAllReservationsForSpot(@PathVariable int spotId) {
         try {
             List<ReservationDto> result = reservationService.fetchAllReservationsForSpot(spotId);
+            for (ReservationDto reservation : result) {
+                reservation.setStrStartTime(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(reservation.getStartTime()));
+                reservation.setStrEndTime(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(reservation.getEndTime()));
+            }
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
-
-
-
-    // MANAGERS ONLY
-    @GetMapping("/manager")
-    public ResponseEntity<?> fetchAllLotsAndSpotsForManager(HttpServletRequest request) {
+    @GetMapping("/lots/{lotId}/price")
+    public ResponseEntity<?> getReservationPrice(@PathVariable(name="lotId") int lotId,
+                                                 @RequestParam(name="startTime")Timestamp startTime,
+                                                 @RequestParam(name="endTime")Timestamp endTime){
         try {
-            System.out.println("fetching all lots and spots for manager");
-            int mgrId = (int) request.getAttribute("id");
-            List<ParkingLotDto> result = reservationService.fetchAllLotsAndSpotsForManager(mgrId);
-            return ResponseEntity.status(HttpStatus.OK).body(result);
+
+            System.out.println("Getting price for lot: " + startTime + " " + endTime);
+
+
+            double price = reservationService.getReservationPrice(lotId, startTime, endTime);
+            return ResponseEntity.status(HttpStatus.OK).body(price);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+
     }
 
-    @GetMapping("/manager/spots/{spotId}")
-    public ResponseEntity<?> fetchAllReservationsWithDriversForSpot(@PathVariable int spotId) {
+    // from waiting to arrived and from reserved to occupied
+    @PostMapping("/{reservationId}/spots/{spotId}/checkin")
+    public ResponseEntity<?> checkIn(@PathVariable int reservationId, @PathVariable int spotId, HttpServletRequest request) {
         try {
-            List<ReservationDto> result = reservationService.fetchAllReservationsWithDriversForSpot(spotId);
-            return ResponseEntity.status(HttpStatus.OK).body(result);
+            int driverId = (int) request.getAttribute("id");
+            reservationService.checkIn(reservationId, spotId, driverId);
+            return ResponseEntity.status(HttpStatus.OK).body("Checked in successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

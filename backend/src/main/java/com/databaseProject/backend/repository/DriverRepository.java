@@ -1,5 +1,6 @@
 package com.databaseProject.backend.repository;
 
+import com.databaseProject.backend.dto.DriverDto;
 import com.databaseProject.backend.entity.Driver;
 import com.databaseProject.backend.entity.User;
 import com.databaseProject.backend.mapper.sqlMapper.DriverMapper;
@@ -34,4 +35,9 @@ public class DriverRepository {
     }
 
 
+    public Driver findById(int driverId) {
+        System.out.println(driverId + "inside driver repository");
+        String sql = "SELECT * FROM driver WHERE driver_id = ?";
+        return jdbcTemplate.queryForObject(sql, new DriverMapper(), driverId);
+    }
 }

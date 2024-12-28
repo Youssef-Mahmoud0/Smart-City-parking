@@ -39,13 +39,11 @@ public class ReservationService {
         Map<Integer, List<SpotReservationDto>> reservationsBySpot = reservations.stream().collect(Collectors.groupingBy(SpotReservationDto::getSpotId));
 
         return spots.stream().map(spot -> {
-            List<SpotReservationDto> spotReservations = reservationsBySpot.getOrDefault(spot.getSpotId(), List.of())
-                    .stream()
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-            spot.setReservations(spotReservations);
+            List<SpotReservationDto> spotReservations = reservationsBySpot.getOrDefault(spot.getSpotId(), List.of());
+            spot.setReservations(spotReservations); // Set an empty list if no reservations exist
             return spot;
         }).collect(Collectors.toList());
+
     }
 
     public List<ReservationDto> fetchAllReservations(int driverId) {
@@ -53,14 +51,18 @@ public class ReservationService {
     }
 
     @Transactional
-    public void reserveSpot(int lotId, int spotId, Timestamp startTime, Timestamp endTime, int driverId) {
+    public void reserveSpot(int spotId, Timestamp startTime, Timestamp endTime, int driverId) {
         validateTimes(startTime, endTime);
+//        boolean isSpotAvailableWithLock = reservationRepository.isSpotAvailableWithLock(spotId);
+//        System.out.println("Spot availability: " + isSpotAvailableWithLock);
+//        if (!isSpotAvailableWithLock) throw new IllegalArgumentException("Spot is not available.");
 
         boolean isOverlapping = reservationRepository.checkOverlapping(spotId, startTime, endTime);
+        System.out.println("Overlapping check: " + isOverlapping);
         if (isOverlapping) throw new IllegalArgumentException("Reservation overlaps with an existing reservation.");
 
         if (driverId == -1) throw new RuntimeException("Driver not logged in.");
-        reservationRepository.createReservation(lotId, spotId, startTime, endTime, driverId);
+        reservationRepository.createReservation(spotId, startTime, endTime, driverId);
     }
 
     @Transactional
@@ -77,7 +79,7 @@ public class ReservationService {
         if (!startTime.before(endTime)) {
             throw new IllegalArgumentException("Start time must be before the end time.");
         }
-        // reservation duration is at least 1h and at most 1d
+        // reservation duration is at least 1h
         long durationMillis = endTime.getTime() - startTime.getTime();
         long oneHourMillis = 60 * 60 * 1000;
         long oneDayMillis = 24 * 60 * 60 * 1000;
@@ -93,6 +95,9 @@ public class ReservationService {
         return reservationRepository.getReservationsBySpotId(spotId);
     }
 
+    public void checkIn(int reservationId, int spotId, int driverId) {
+        reservationRepository.checkIn(reservationId, spotId, driverId);
+    }
     public List<ParkingLotDto> fetchAllLotsAndSpotsForManager(int mgrId) {
         return parkingLotRepository.getLotsAndSpotsByManagerId(mgrId);
     }

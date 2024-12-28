@@ -8,7 +8,6 @@ import java.sql.SQLException;
 
 public class SpotReservationMapper implements RowMapper<SpotReservationDto> {
 
-    @Override
     public SpotReservationDto mapRow(ResultSet rs, int rowNum) throws SQLException {
         SpotReservationDto dto = new SpotReservationDto();
         dto.setSpotId(rs.getInt("spot_id"));

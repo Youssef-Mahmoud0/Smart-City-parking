@@ -46,6 +46,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         try {
             // Ensure the filter is only processed once per request
+
             if (request.getAttribute("filterProcessed") != null) {
                 filterChain.doFilter(request, response);
                 return;

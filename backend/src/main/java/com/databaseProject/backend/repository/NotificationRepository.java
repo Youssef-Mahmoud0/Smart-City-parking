@@ -33,4 +33,23 @@ public class NotificationRepository {
         String sql = "UPDATE notification SET seen = true WHERE driver_id = ?";
         jdbcTemplate.update(sql, driverID);
     }
+
+    public List<Integer> getStartedReservations() {
+        String getReservationsSql = "{call notify_reservation_start()}";
+        return jdbcTemplate.queryForList(getReservationsSql, Integer.class);
+    }
+
+    public List<Integer> getEndedReservations() {
+        String getReservationsSql = "{call notify_end_time_arrived()}";
+        return jdbcTemplate.queryForList(getReservationsSql, Integer.class);
+    }
+    public List<Integer> getExceeded30MinReservations() {
+        String getReservationsSql = "{call handle_reservations_exceeding_30min()}";
+        return jdbcTemplate.queryForList(getReservationsSql, Integer.class);
+    }
+
+    public List<Integer> getReservationssEndsIn5Min() {
+        String getReservationsSql = "{call notify_reservation_end_before_5min()}";
+        return jdbcTemplate.queryForList(getReservationsSql, Integer.class);
+    }
 }

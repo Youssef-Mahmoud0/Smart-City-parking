@@ -7,7 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 function Header({ title }) {
     const [notifications, setNotifications] = useState([]);
     const [showNotifications, setShowNotifications] = useState(false);
-    const driverID = 1;
+    const driverID = document.cookie.split('id=')[1];
+    console.log(driverID)
     useEffect(() => {
         if (title != 'Driver') return
         handleGetNotifications()
@@ -20,7 +21,7 @@ function Header({ title }) {
     useEffect(() => {
         if (title != 'Driver') return
         // Establish WebSocket connection for notifications
-        const socket = new WebSocket(`ws://localhost:8080/notifications?driverID=${1}`); // Replace with your WebSocket endpoint
+        const socket = new WebSocket(`ws://localhost:8080/notifications?driverID=${driverID}`); // Replace with your WebSocket endpoint
 
         socket.onopen = () => {
             console.log('WebSocket connection established');
@@ -36,7 +37,7 @@ function Header({ title }) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                type: notification.type === 'error' ? 'confirmation' : 'success'
+                type: notification.type === 'PENALTY' ? 'error' : 'message'
             });
             handleGetNotifications()
         };
@@ -75,9 +76,9 @@ function Header({ title }) {
                             {notifications.map((notification, index) => (
                                 <div key={index} className="notification-item">
                                     <div className="notification-type">
-                                        {notification.type == 'penality' ?
+                                        {notification.type == 'PENALTY' ?
                                           <i className="fa-solid fa-money-bill-trend-up penality"></i>  :  
-                                          <i className="fa-solid fa-circle-check confirmation"></i>
+                                          <i class="fa-solid fa-envelope confirmation"></i>
                                         }
                                     </div>
                                     <div className="notification-body">
