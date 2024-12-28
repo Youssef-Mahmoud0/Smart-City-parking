@@ -1,33 +1,21 @@
 package com.databaseProject.backend.dto;
 
 import com.databaseProject.backend.enums.ReservationStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.sql.Timestamp;
 
 public class ReservationDto {
-    private int reservationId;
-    private int driverId;
     private int spotId;
+    private int lotId;
+    private int driverId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Timestamp startTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Timestamp endTime;
     private ReservationStatus status;
-//    private Timestamp expectedEndTime;
-
-    public int getReservationId() {
-        return reservationId;
-    }
-
-    public void setReservationId(int reservationId) {
-        this.reservationId = reservationId;
-    }
-
-    public int getDriverId() {
-        return driverId;
-    }
-
-    public void setDriverId(int diverId) {
-        this.driverId = diverId;
-    }
+    private double price;
+    private double penalty;
 
     public int getSpotId() {
         return spotId;
@@ -35,6 +23,14 @@ public class ReservationDto {
 
     public void setSpotId(int spotId) {
         this.spotId = spotId;
+    }
+
+    public int getDriverId() {
+        return driverId;
+    }
+
+    public void setDriverId(int driverId) {
+        this.driverId = driverId;
     }
 
     public Timestamp getStartTime() {
@@ -61,11 +57,28 @@ public class ReservationDto {
         this.status = status;
     }
 
-//    public Timestamp getExpectedEndTime() {
-//        return expectedEndTime;
-//    }
-//
-//    public void setExpectedEndTime(Timestamp expectedEndTime) {
-//        this.expectedEndTime = expectedEndTime;
-//    }
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public double getPenalty() {
+        return penalty;
+    }
+
+    public void setPenalty(double penalty) {
+        this.penalty = penalty;
+    }
+
+
+    public int getLotId() {
+        return lotId;
+    }
+
+    public void setLotId(int lotId) {
+        this.lotId = lotId;
+    }
 }

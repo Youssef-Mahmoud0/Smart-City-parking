@@ -5,5 +5,6 @@ public enum ReservationStatus {
     DRIVER_ARRIVED,
     CANCELLED,
     NO_SHOW,
-    COMPLETED
+    COMPLETED,
+    OVER_STAY
 }
