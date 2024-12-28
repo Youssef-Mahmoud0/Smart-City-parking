@@ -92,6 +92,10 @@ public class ReservationService {
         return reservationRepository.getReservationsBySpotId(spotId);
     }
 
+    public int getReservationPrice(int spotId, Timestamp startTime, Timestamp endTime) {
+        return reservationRepository.getReservationPrice(spotId, startTime, endTime);
+    }
+
 //    public void reserveSpot(int spotId, Timestamp startTime, Timestamp expectedEndTime, int driverId) {
 //        validateTimes(startTime, expectedEndTime);
 //        boolean isSpotAvailable = reservationRepository.isSpotAvailable(spotId);

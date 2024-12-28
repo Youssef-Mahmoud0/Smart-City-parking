@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -120,6 +121,19 @@ public class ReservationController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/reservations/{reservationId}")
+    public ResponseEntity<?> getReservationPrice(@PathVariable(name="lotId") int lotId,
+                                                 @PathVariable(name="startTime")Timestamp startTime,
+                                                 @PathVariable(name="endTime")Timestamp endTime){
+        try {
+            double price = reservationService.getReservationPrice(lotId, startTime, endTime);
+            return ResponseEntity.status(HttpStatus.OK).body(price);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
     }
 
 

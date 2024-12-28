@@ -70,4 +70,13 @@ public class ReservationRepository {
         String getReservationsSql = "SELECT * FROM reservation WHERE spot_id = ?";
         return jdbcTemplate.query(getReservationsSql, new Object[]{spotId}, new ReservationMapper());
     }
+
+    public int getReservationPrice(int spotId, Timestamp startTime, Timestamp endTime) {
+        String sql = "{call get_dynamic_spot_price(?, ?, ?, ?)}";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{spotId, startTime, endTime}, Integer.class);
+        } catch (DataAccessException e) {
+            throw new RuntimeException("Failed to get reservation price.");
+        }
+    }
 }
