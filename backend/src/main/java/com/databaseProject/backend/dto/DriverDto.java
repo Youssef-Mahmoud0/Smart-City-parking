@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 public class DriverDto {
-
     private int driverId;
     private String licensePlateNumber;
     private String name;

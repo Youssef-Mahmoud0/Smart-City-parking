@@ -10,8 +10,9 @@ import java.sql.Timestamp;
 @Data
 public class Reservation {
     private int reservationId;
-    private int spotId;
     private int driverId;
+    private int spotId;
+    private int lotId;
     private Timestamp startTime;
     private Timestamp endTime;
     private ReservationStatus status;
