@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ParkingLotPerformance" pageWidth="595" pageHeight="842" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" uuid="e10c9f8e-7bb0-4f58-9a7a-3b1c18f5a458">
+    <parameter name="REPORT_TITLE" class="java.lang.String"/>
+    <parameter name="MGR_ID" class="java.lang.Integer"/>
+    <queryString>
+        <![CDATA[
+    SELECT
+        p.lot_id,
+        p.name AS location,
+        p.capacity,
+        COUNT(CASE WHEN s.status = 'AVAILABLE' THEN 1 END) AS available_spots,
+        COUNT(CASE WHEN s.status = 'OCCUPIED' THEN 1 END) AS occupied_spots,
+        COUNT(CASE WHEN s.status = 'RESERVED' THEN 1 END) AS reserved_spots,
+        ROUND((COUNT(CASE WHEN s.status = 'OCCUPIED' THEN 1 END) / p.capacity) * 100, 2) AS occupancy_rate
+    FROM parking_lot p
+    LEFT JOIN parking_spot s ON p.lot_id = s.lot_id
+    WHERE p.mgr_id = $P{MGR_ID}
+    GROUP BY p.lot_id, p.name, p.capacity
+    ORDER BY occupancy_rate DESC;
+    ]]>
+    </queryString>
+
+    <field name="lot_id" class="java.lang.Integer"/>
+    <field name="location" class="java.lang.String"/>
+    <field name="capacity" class="java.lang.Integer"/>
+    <field name="available_spots" class="java.lang.Integer"/>
+    <field name="occupied_spots" class="java.lang.Integer"/>
+    <field name="reserved_spots" class="java.lang.Integer"/>
+    <field name="occupancy_rate" class="java.math.BigDecimal"/>
+    <title>
+        <band height="50">
+            <textField>
+                <reportElement x="0" y="0" width="555" height="30" uuid="e10c9f8e-7bb0-4f58-9a7a-3b1c18f5a458"/>
+                <textFieldExpression><![CDATA[$P{REPORT_TITLE}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+    <!-- Column Headers -->
+    <columnHeader>
+        <band height="20">
+            <textField>
+                <reportElement x="0" y="0" width="50" height="20"/>
+                <textFieldExpression><![CDATA["Lot ID"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="50" y="0" width="200" height="20"/>
+                <textFieldExpression><![CDATA["Location"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="250" y="0" width="50" height="20"/>
+                <textFieldExpression><![CDATA["Capacity"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="300" y="0" width="50" height="20"/>
+                <textFieldExpression><![CDATA["Available Spots"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="350" y="0" width="50" height="20"/>
+                <textFieldExpression><![CDATA["Occupied Spots"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="400" y="0" width="50" height="20"/>
+                <textFieldExpression><![CDATA["Reserved Spots"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="450" y="0" width="50" height="20"/>
+                <textFieldExpression><![CDATA["Occupancy Rate"]]></textFieldExpression>
+            </textField>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="20">
+            <textField>
+                <reportElement x="0" y="0" width="50" height="20"/>
+                <textFieldExpression><![CDATA[$F{lot_id}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="50" y="0" width="200" height="20"/>
+                <textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="250" y="0" width="50" height="20"/>
+                <textFieldExpression><![CDATA[$F{capacity}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="300" y="0" width="50" height="20"/>
+                <textFieldExpression><![CDATA[$F{available_spots}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="350" y="0" width="50" height="20"/>
+                <textFieldExpression><![CDATA[$F{occupied_spots}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="400" y="0" width="50" height="20"/>
+                <textFieldExpression><![CDATA[$F{reserved_spots}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="450" y="0" width="50" height="20"/>
+                <textFieldExpression><![CDATA[$F{occupancy_rate}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+</jasperReport>

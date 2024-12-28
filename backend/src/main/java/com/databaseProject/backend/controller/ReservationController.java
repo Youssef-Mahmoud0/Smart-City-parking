@@ -116,10 +116,11 @@ public class ReservationController {
 
 
     // MANAGERS ONLY
-    @GetMapping("/manager/{mgrId}")
-    public ResponseEntity<?> fetchAllLotsAndSpotsForManager(@PathVariable int mgrId, HttpServletRequest request) {
+    @GetMapping("/manager")
+    public ResponseEntity<?> fetchAllLotsAndSpotsForManager(HttpServletRequest request) {
         try {
-//            int mgrId = (int) request.getAttribute("id");
+            System.out.println("fetching all lots and spots for manager");
+            int mgrId = (int) request.getAttribute("id");
             List<ParkingLotDto> result = reservationService.fetchAllLotsAndSpotsForManager(mgrId);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (RuntimeException e) {

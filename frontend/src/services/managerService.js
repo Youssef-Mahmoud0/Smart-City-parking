@@ -1,7 +1,7 @@
 const backedURL = import.meta.env.VITE_BACKEND_URL;
 
 async function getManagerLots() {
-  const url = `${backedURL}/manager`;
+  const url = "http://localhost:8080/manager";
   const response = await fetch(url, {
     method: "GET",
     credentials: "include",
@@ -9,6 +9,7 @@ async function getManagerLots() {
       "Content-Type": "application/json",
     },
   });
+  console.log(response);
   const data = await response.json();
   console.log(data);
 
@@ -36,7 +37,7 @@ async function getLotReport(lotId) {
 }
 
 async function getSpotReservations(spotId) {
-  const url = `${backedURL}/manager/${spotId}`;
+  const url = `http://localhost:8080/spots/${spotId}/reservations`;
   const response = await fetch(url, {
     method: "GET",
     credentials: "include",

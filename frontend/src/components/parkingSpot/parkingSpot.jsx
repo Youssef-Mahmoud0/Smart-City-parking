@@ -3,17 +3,7 @@ import "./parkingSpot.css";
 import {getSpotReservations} from "../../services/managerService";
 export default function ParkingSpot({spot}) {
     const [showDetails, setShowDetails] = useState(false);
-    const [reservations, setReservations] = useState([{
-        reservationId: "",
-        startTime: "",
-        endTime: "",
-        driver: {
-            driverId: "",
-            name: "",
-            plateNumber: ""
-        },
-        status: "",
-    }]);
+    const [reservations, setReservations] = useState([]);
     const handleShowDetails = async () => {
         setShowDetails(true);
         try {

@@ -73,9 +73,10 @@ public class AuthController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/generate-report-manager")
-    public ResponseEntity<byte[]> getPdfReportManager() {
+    public ResponseEntity<byte[]> getPdfReportManager(HttpServletRequest request) {
         try {
-            byte[] pdfBytes = reportGenerator.generateReport(false, 1);
+            Object id = request.getAttribute("id");
+            byte[] pdfBytes = reportGenerator.generateReport(false, Integer.parseInt(id.toString()));
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-Type", "application/pdf");
             headers.add("Content-Disposition", "inline; filename=\"ParkingLotPerformanceReport.pdf\"");

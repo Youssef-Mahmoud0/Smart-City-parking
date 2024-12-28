@@ -1,33 +1,20 @@
 import React, {useState, useEffect} from "react";
 import ParkingLot from "../../components/parkingLot/parkingLot";
-
+import {getManagerLots} from "../../services/managerService";
 function ManagerHomePage() {
-    const [lots, setLots] = useState([{
-        name: "",
-        id: "1",
-        location: "",
-        capacity: "",
-        basePrice: "",
-    }, {
-        name: "",
-        id: "2",
-        location: "",
-        capacity: "",
-        basePrice: "",
-    }]);
-
-        // useEffect(() => {
-        //     const getLots = async () => {
-        //         try {
-        //             const fetchedLots = await fetchParkingLots();
-        //             setLots(fetchedLots);
-        //         } catch (error) {
-        //             console.error("Error fetching lots:", error);
-        //         } 
-        //     }
+    const [lots, setLots] = useState([]);
+        useEffect(() => {
+            const getLots = async () => {
+                try {
+                    const fetchedLots = await getManagerLots();
+                    setLots(fetchedLots);
+                } catch (error) {
+                    console.error("Error fetching lots:", error);
+                } 
+            }
     
-        //     getLots();
-        // }, []);
+            getLots();
+        }, []);
 
     return (
         <div className="driver-home">
