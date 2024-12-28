@@ -197,8 +197,10 @@ BEGIN
     -- Declare continue handler for cursor NOT FOUND
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
     
-	-- Create a temporary table to store the driver IDs
-    CREATE TEMPORARY TABLE temp_driver_ids_end (driver_id INT);
+	SELECT r.driver_id
+        FROM reservation r
+        WHERE r.status = 'DRIVER_ARRIVED'
+          AND r.end_time <= NOW();
     -- Open the cursor
     OPEN reservation_cursor;
 
@@ -223,8 +225,7 @@ BEGIN
             -- Apply penalty
             CALL apply_penalty(driver_id, (base_price / 2) + price);
 
-            -- Store the driver_id in the temporary table
-            INSERT INTO temp_driver_ids_end (driver_id) VALUES (driver_id);
+            
         ELSE
             -- Handle case where base_price is not found
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Base price not found for the parking lot';
@@ -234,11 +235,6 @@ BEGIN
     -- Close the cursor
     CLOSE reservation_cursor;
 
-    -- Return the driver_ids
-    SELECT driver_id FROM temp_driver_ids_end;
-
-    -- Drop the temporary table after use
-    DROP TEMPORARY TABLE IF EXISTS temp_driver_ids_end;
 END$$
 
 -- Procedure 3: notify_reservation_end_before_5min

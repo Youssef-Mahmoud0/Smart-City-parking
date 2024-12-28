@@ -27,6 +27,7 @@ public class NotificationService {
 
     @Scheduled(fixedRate = 60000)
     public void notifyReservationsDrivers() throws Exception {
+        System.out.println("Checking for notifications");
         List<Integer> startedReservations = notificationRepository.getStartedReservations();
         List<Integer> endedReservations = notificationRepository.getEndedReservations();
         List<Integer> exceeded30MinReservations = notificationRepository.getExceeded30MinReservations();
@@ -37,7 +38,7 @@ public class NotificationService {
             notification.setDriverID(driverID);
             notification.setMessage("Your reservation has started");
             notification.setType("MESSAGE");
-
+            System.out.println("Sending notification to driver " + driverID);
             notificationHandler.sendNotification(notification);
         }
 
@@ -45,6 +46,7 @@ public class NotificationService {
             notification.setDriverID(driverID);
             notification.setMessage("Your reservation has ended");
             notification.setType("MESSAGE");
+            System.out.println("Sending notification to driver " + driverID);
 
             notificationHandler.sendNotification(notification);
         }
@@ -54,6 +56,7 @@ public class NotificationService {
             notification.setMessage("Your reservation has exceeded 30 minutes");
             notification.setType("MESSAGE");
 
+            System.out.println("Sending notification to driver " + driverID);
             notificationHandler.sendNotification(notification);
         }
 
@@ -62,6 +65,7 @@ public class NotificationService {
             notification.setMessage("Your reservation will end in 5 minutes");
             notification.setType("MESSAGE");
 
+            System.out.println("Sending notification to driver " + driverID);
             notificationHandler.sendNotification(notification);
         }
     }
