@@ -5,20 +5,21 @@ import PenaltiesList from "../../components/penaltiesList/PenaltiesList";
 import ReservationsList from "../../components/reservationsList/ReservationsList";
 import Map from "../../components/map/Map";
 import ParkingSpotsGrid from "../../components/parkingSpotsGrid/ParkingSpotsGrid";
+import Payment from "../../components/payment/Payment";
 
-import { 
+import {
     fetchParkingLots,
-    fetchParkingSpots, 
-    fetchDriver, 
+    fetchParkingSpots,
+    fetchDriver,
     fetchReservations,
-    cancelReservation
-
- } from "../../services/driverHomeService";
+    cancelReservation,
+    checkIn,
+    checkOut,
+} from "../../services/driverHomeService";
 
 import "./DriverHome.css";
 
 function DriverHome() {
-
     const [driver, setDriver] = useState(null);
     const [loadingDriver, setLoadingDriver] = useState(true);
 
@@ -26,15 +27,13 @@ function DriverHome() {
     const [chosenLot, setChosenLot] = useState(null);
     const [parkingSpots, setParkingSpots] = useState([]);
 
-    const [isLoading, setIsLoading] = useState(true); // Add loading state
+    const [isLoading, setIsLoading] = useState(true);
 
     const [reservations, setReservations] = useState([]);
     const [loadingReservations, setLoadingReservations] = useState(true);
 
-
-
-    
-
+    const [showPayment, setShowPayment] = useState(false);
+    const [reservationToCheckout, setReservationToCheckout] = useState(null);
 
     useEffect(() => {
         const getLots = async () => {
@@ -48,11 +47,10 @@ function DriverHome() {
             } finally {
                 setIsLoading(false);
             }
-        }
+        };
 
         getLots();
     }, []);
-
 
     useEffect(() => {
         setLoadingDriver(true);
@@ -65,12 +63,10 @@ function DriverHome() {
             } finally {
                 setLoadingDriver(false);
             }
-        }
+        };
 
         getDriver();
     }, []);
-
-
 
     useEffect(() => {
         setLoadingReservations(true);
@@ -81,94 +77,103 @@ function DriverHome() {
             } catch (error) {
                 console.error("Error fetching reservations:", error);
             } finally {
-                setLoadingReservations(false);  
+                setLoadingReservations(false);
             }
-        }
+        };
 
         getReservations();
     }, []);
-
 
     const processLocation = (lots) => {
         lots.forEach((lot) => {
             lot.coordinates = [lot.latitude, lot.longitude];
         });
-    }
+    };
 
     const chooseLot = async (lot) => {
         setChosenLot(lot);
-        console.log(lot.lotId);
         const fetchedParkingSpots = await fetchParkingSpots(lot.lotId);
-
-        console.log(fetchedParkingSpots);
         setParkingSpots(fetchedParkingSpots);
-
-
-    }
-
-
+    };
 
     const onCancelReservation = async (reservation) => {
-
-
         try {
-            const response = await cancelReservation(reservation);
-            console.log(response);
+            await cancelReservation(reservation);
             const fetchedReservations = await fetchReservations();
             setReservations(fetchedReservations);
         } catch (error) {
             console.error("Error canceling reservation:", error);
         }
+    };
 
+    const onCheckIn = async (reservation) => {
+        try {
+            await checkIn(reservation);
+            const fetchedReservations = await fetchReservations();
+            setReservations(fetchedReservations);
+        } catch (error) {
+            console.error("Error checking in:", error);
+        }
+    };
 
-    }
+    const onCheckout = (reservation) => {
+        setReservationToCheckout(reservation);
+        setShowPayment(true);
+    };
 
+    const handlePaymentSuccess = async () => {
+        try {
+            if (reservationToCheckout) {
+                await checkOut(reservationToCheckout);
+                const fetchedReservations = await fetchReservations();
+                setReservations(fetchedReservations);
+            }
+        } catch (error) {
+            console.error("Error checking out:", error);
+        } finally {
+            setShowPayment(false);
+            setReservationToCheckout(null);
+        }
+    };
 
     return (
         <div className="driver-home">
             <Header title={"Driver"} />
             <main className="driver-main">
                 <div className="content-container">
-
-                    {
-                        loadingDriver ? (
-                            <div>Loading driver...</div>
-                        ) : (
-                            <DriverProfile driver={driver} />
-                        )
-                    }
-                    
-                    {/* <PenaltiesList /> */}
+                    {loadingDriver ? (
+                        <div>Loading driver...</div>
+                    ) : (
+                        <DriverProfile driver={driver} />
+                    )}
 
                     <ReservationsList
                         reservations={reservations}
-                        onCheckIn={(reservation) => console.log("Check In:", reservation)}
+                        onCheckIn={(reservation) => onCheckIn(reservation)}
                         onCancel={(reservation) => onCancelReservation(reservation)}
-                        onCheckout={(reservation) => console.log("Check Out:", reservation)}
+                        onCheckout={(reservation) => onCheckout(reservation)}
                     />
-
 
                     {isLoading ? (
                         <div>Loading parking lots...</div>
                     ) : (
-                        <Map
-                            lots={lots}
-                            chooseLot={chooseLot}
-                        />
+                        <Map lots={lots} chooseLot={chooseLot} />
                     )}
-                    {
-                        chosenLot &&
-                        <ParkingSpotsGrid
-                            parkingSpots={parkingSpots}
-                            lot={chosenLot}
-                        />
-                    }
-
+                    {chosenLot && (
+                        <ParkingSpotsGrid parkingSpots={parkingSpots} lot={chosenLot} />
+                    )}
                 </div>
+
+                {showPayment && (
+                    <div className="payment-modal">
+                        <PaymentOptions
+                            onPaymentSuccess={handlePaymentSuccess}
+                            onCancel={() => setShowPayment(false)}
+                        />
+                    </div>
+                )}
             </main>
         </div>
-
-
     );
 }
 

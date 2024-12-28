@@ -173,7 +173,7 @@ export async function fetchReservations() {
 
 
 export async function cancelReservation(reservation) {
-    const response = await fetch(`${url}/spots/${reservation.spotId}/cancel`,
+    const response = await fetch(`${url}/${reservation.reservationId}/spots/${reservation.spotId}/cancel`,
         {
             method: 'POST',
             credentials: 'include',
@@ -185,6 +185,45 @@ export async function cancelReservation(reservation) {
 
     if (!response.ok) {
         throw new Error('An error occurred while canceling the reservation');
+    }
+
+    const result = await response.text();
+    return result;
+}
+
+
+export async function checkIn(reservation) {
+    console.log("inside checkin",reservation);
+    const response = await fetch(`${url}/${reservation.reservationId}/spots/${reservation.spotId}/checkin`,
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+    if (!response.ok) {
+        throw new Error('An error occurred while checking in');
+    }
+
+    const result = await response.text();
+    return result;
+}
+
+
+export async function checkOut(reservation) {
+    const response = await fetch(`${url}/${reservation.reservationId}/spots/${reservation.spotId}/checkout`,
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+    if (!response.ok) {
+        throw new Error('An error occurred while checking out');
     }
 
     const result = await response.text();
