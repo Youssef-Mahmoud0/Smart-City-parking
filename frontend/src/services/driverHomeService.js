@@ -157,7 +157,7 @@ export async function fetchReservationPrice(lotId, startTime, endTime) {
 
     // console.log("this is the returned price", price);
     // return price? price : 100;
-    return 100;
+    return price;
 }
 
 

@@ -172,4 +172,28 @@ public class ReservationController {
         }
     }
 
+    // MANAGERS ONLY
+    @GetMapping("/manager")
+    public ResponseEntity<?> fetchAllLotsAndSpotsForManager(HttpServletRequest request) {
+        try {
+            System.out.println("fetching all lots and spots for manager");
+            int mgrId = (int) request.getAttribute("id");
+            System.out.println(mgrId);
+            List<ParkingLotDto> result = reservationService.fetchAllLotsAndSpotsForManager(mgrId);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/manager/spots/{spotId}")
+    public ResponseEntity<?> fetchAllReservationsWithDriversForSpot(@PathVariable int spotId) {
+        try {
+            List<ReservationDto> result = reservationService.fetchAllReservationsWithDriversForSpot(spotId);
+            System.out.println(result);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }

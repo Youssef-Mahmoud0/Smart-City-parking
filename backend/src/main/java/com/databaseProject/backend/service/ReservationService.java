@@ -99,40 +99,22 @@ public class ReservationService {
     }
 
     public double getReservationPrice(int lotId, Timestamp startTime, Timestamp endTime) {
-        return reservationRepository.getReservationPrice(lotId, startTime, endTime);
-    }
+        // Get the price per hour from the repository
+        double pricePerHour = reservationRepository.getReservationPrice(lotId, startTime, endTime);
 
-    //    public void reserveSpot(int spotId, Timestamp startTime, Timestamp expectedEndTime, int driverId) {
-//        validateTimes(startTime, expectedEndTime);
-//        boolean isSpotAvailable = reservationRepository.isSpotAvailable(spotId);
-//        if (!isSpotAvailable) throw new IllegalArgumentException("Spot is not available.");
-//        if (driverId == -1) throw new RuntimeException("Driver not logged in.");
-//        reservationRepository.createReservation(spotId, startTime, expectedEndTime, driverId);
-//    }
-//
-//    private void validateTimes(Timestamp startTime, Timestamp expectedEndTime) {
-//        if (!startTime.before(expectedEndTime)) {
-//            throw new IllegalArgumentException("Start time must be before the expected end time.");
-//        }
-//        // reservation duration is at least 1h
-//        long durationMillis = expectedEndTime.getTime() - startTime.getTime();
-//        long oneHourMillis = 60 * 60 * 1000;
-//        if (durationMillis < oneHourMillis) {
-//            throw new IllegalArgumentException("Minimum reservation duration is 1 hour.");
-//        }
-//    }
-//
-//    public void cancelReservation(int spotId, int driverId) {
-//        reservationRepository.cancelReservation(spotId, driverId);
-//    }
-//
-//    public void completeReservation(int spotId, int driverId) {
-//        reservationRepository.completeReservation(spotId, driverId);
-//    }
-//
-//    public List<ReservationDto> fetchAllReservations(int driverId) {
-//        return reservationRepository.getReservationsById(driverId);
-//    }
+        // Calculate the duration in hours (ignoring seconds)
+        long milliseconds = endTime.getTime() - startTime.getTime();
+        long hours = (milliseconds / (1000 * 60 * 60));
+
+        // Calculate and return the total price
+        return hours * pricePerHour;
+    }
+    public List<ParkingLotDto> fetchAllLotsAndSpotsForManager(int mgrId) {
+        return parkingLotRepository.getLotsAndSpotsByManagerId(mgrId);
+    }
+    public List<ReservationDto> fetchAllReservationsWithDriversForSpot(int spotId) {
+        return reservationRepository.getReservationsWithDriversBySpotId(spotId);
+    }
     public void checkIn(int reservationId, int spotId, int driverId) {
         reservationRepository.checkIn(reservationId, spotId, driverId);
     }

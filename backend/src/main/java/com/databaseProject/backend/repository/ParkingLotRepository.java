@@ -52,4 +52,5 @@ public class ParkingLotRepository {
         }
         return parkingLots;
     }
+
 }

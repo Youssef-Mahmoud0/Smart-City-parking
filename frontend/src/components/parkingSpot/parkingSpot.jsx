@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import "./parkingSpot.css";
 import {getSpotReservations} from "../../services/managerService";
 export default function ParkingSpot({spot}) {
+    console.log(spot);
     const [showDetails, setShowDetails] = useState(false);
     const [reservations, setReservations] = useState([]);
     const handleShowDetails = async () => {

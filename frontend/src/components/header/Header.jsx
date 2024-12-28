@@ -78,7 +78,7 @@ function Header({ title }) {
                                     <div className="notification-type">
                                         {notification.type == 'PENALTY' ?
                                           <i className="fa-solid fa-money-bill-trend-up penality"></i>  :  
-                                          <i class="fa-solid fa-envelope confirmation"></i>
+                                          <i className="fa-solid fa-envelope confirmation"></i>
                                         }
                                     </div>
                                     <div className="notification-body">
@@ -95,6 +95,7 @@ function Header({ title }) {
                     )}
                 </div>
             )}
+            <i className="fa-solid fa-door-open" onCLick={()=> {window.location.href = "/"}}></i>
         </header>
     );
 }

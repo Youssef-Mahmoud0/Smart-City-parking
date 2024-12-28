@@ -2,6 +2,7 @@ package com.databaseProject.backend.repository;
 
 import com.databaseProject.backend.dto.ReservationDto;
 import com.databaseProject.backend.mapper.sqlMapper.ReservationMapper;
+import com.databaseProject.backend.mapper.sqlMapper.ReservationWithDriverMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -79,30 +80,16 @@ public class ReservationRepository {
         return jdbcTemplate.query(getReservationsSql, new Object[]{spotId}, new ReservationMapper());
     }
 
-    public double getReservationPrice(int lotId, Timestamp startTime, Timestamp endTime) {
-//        String sql = "{call get_dynamic_spot_price(?, ?, ?, ?)}";
-//        try {
-//            return jdbcTemplate.queryForObject(sql, new Object[]{spotId, startTime, endTime}, Integer.class);
-//        } catch (DataAccessException e) {
-//            throw new RuntimeException("Failed to get reservation price.");
-//        }
-        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withProcedureName("get_dynamic_spot_price");
-
-        Map<String, Object> result = jdbcCall.execute(
-                Map.of(
-                        "lot_id", lotId,
-                        "reservation_start_time", startTime,
-                        "reservation_end_time", endTime
-                )
-        );
-
-        // Retrieve the OUT parameter
-        return (Double) result.get("dynamic_price");
-
-
+    public double getReservationPrice(int spotId, Timestamp startTime, Timestamp endTime) {
+        String sql = "{call get_dynamic_spot_price(?, ?, ?)}";
+        try {
+            double price = jdbcTemplate.queryForObject(sql, new Object[]{spotId, startTime, endTime}, Double.class);
+            System.out.println(price);
+            return price;
+        } catch (DataAccessException e) {
+            throw new RuntimeException("Failed to get reservation price.");
+        }
     }
-
     // change spot status from reserved to occupied and reservation status from waiting for arrival to driver arrived
     public void checkIn(int reservationId, int spotId, int driverId) {
         String lockSql = "SELECT status FROM parking_spot WHERE spot_id = ? FOR UPDATE";
@@ -113,5 +100,22 @@ public class ReservationRepository {
 
         String updateSpotStatusSql = "UPDATE parking_spot SET status = 'OCCUPIED' WHERE spot_id = ?";
         jdbcTemplate.update(updateSpotStatusSql, spotId);
+    }
+    public List<ReservationDto> getReservationsWithDriversBySpotId(int spotId) {
+        String sql = """
+    SELECT
+        r.spot_id, r.lot_id, r.driver_id, r.start_time, r.end_time, r.status, r.price, r.penalty,
+        d.driver_id, d.license_plate_number, d.name, d.email, d.phone_number, d.payment_method, d.password
+    FROM
+        reservation r
+    JOIN
+        driver d
+    ON
+        r.driver_id = d.driver_id
+    WHERE
+        r.spot_id = ?;
+""";
+
+        return jdbcTemplate.query(sql, new Object[]{spotId}, new ReservationWithDriverMapper());
     }
 }
