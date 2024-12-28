@@ -24,9 +24,7 @@ public class ReportGenerator {
             // Parameters
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("REPORT_TITLE", "Parking Lot Performance Report");
-            if (!isAdmin) {
-                parameters.put("MGR_ID", mgrId);
-            }
+            parameters.put("MGR_ID", mgrId);
             // Fill the report
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, jdbcConnection);
 

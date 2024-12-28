@@ -38,8 +38,7 @@ public class AuthController {
     @Autowired
     private TokenService tokenService;
 
-    @Autowired
-    private ReportGenerator reportGenerator;
+
 
 
     @GetMapping("/users")
@@ -53,40 +52,6 @@ public class AuthController {
         System.out.println("id: " + id.toString());
         System.out.println("Creating user");
         return userService.createUser(user) ;
-    }
-    @CrossOrigin(origins = "*")
-    @GetMapping("/generate-report-admin")
-    public ResponseEntity<byte[]> getPdfReport() {
-        try {
-            byte[] pdfBytes = reportGenerator.generateReport(true, 0);
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Type", "application/pdf");
-            headers.add("Content-Disposition", "inline; filename=\"ParkingLotPerformanceReport.pdf\"");
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .body(pdfBytes);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body(null);
-        }
-    }
-
-    @CrossOrigin(origins = "*")
-    @GetMapping("/generate-report-manager")
-    public ResponseEntity<byte[]> getPdfReportManager(HttpServletRequest request) {
-        try {
-            Object id = request.getAttribute("id");
-            byte[] pdfBytes = reportGenerator.generateReport(false, Integer.parseInt(id.toString()));
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Type", "application/pdf");
-            headers.add("Content-Disposition", "inline; filename=\"ParkingLotPerformanceReport.pdf\"");
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .body(pdfBytes);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body(null);
-        }
     }
 
     @PostMapping("/hash-password")

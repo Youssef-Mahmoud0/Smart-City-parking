@@ -37,12 +37,12 @@ export default function ParkingSpot({spot}) {
                                             <p>End Time: {reservation.endTime}</p>
                                             <p>Status: {reservation.status}</p>
                                             <p>Price: {reservation.price}</p>
-                                            <p>Penality: {reservation.penality}</p>
+                                            <p>Penality: {reservation.penalty}</p>
                                         </div>
                                         <div className="driver-info">
                                             <h4>Driver Info</h4>
                                             <p>Driver Name: {reservation.driver.name}</p>
-                                            <p>Plate Number: {reservation.driver.plateNumber}</p>
+                                            <p>Plate Number: {reservation.driver.licensePlateNumber}</p>
                                         </div>
                                     </li>
                                 )

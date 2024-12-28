@@ -19,7 +19,7 @@ async function getManagerLots() {
 }
 
 async function getLotReport(lotId) {
-  const url = "http://localhost:8080/auth/generate-report-manager";
+  const url = "http://localhost:8080/generate-report-manager";
 
   const response = await fetch(url, {
     method: "GET",
@@ -37,7 +37,7 @@ async function getLotReport(lotId) {
 }
 
 async function getSpotReservations(spotId) {
-  const url = `http://localhost:8080/spots/${spotId}/reservations`;
+  const url = `http://localhost:8080/manager/spots/${spotId}`;
   const response = await fetch(url, {
     method: "GET",
     credentials: "include",

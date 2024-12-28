@@ -96,4 +96,7 @@ public class ReservationService {
     public List<ParkingLotDto> fetchAllLotsAndSpotsForManager(int mgrId) {
         return parkingLotRepository.getLotsAndSpotsByManagerId(mgrId);
     }
+    public List<ReservationDto> fetchAllReservationsWithDriversForSpot(int spotId) {
+        return reservationRepository.getReservationsWithDriversBySpotId(spotId);
+    }
 }

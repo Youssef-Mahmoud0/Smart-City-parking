@@ -127,4 +127,15 @@ public class ReservationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    @GetMapping("/manager/spots/{spotId}")
+    public ResponseEntity<?> fetchAllReservationsWithDriversForSpot(@PathVariable int spotId) {
+        try {
+            List<ReservationDto> result = reservationService.fetchAllReservationsWithDriversForSpot(spotId);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 }
