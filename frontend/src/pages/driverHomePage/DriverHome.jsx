@@ -163,15 +163,6 @@ function DriverHome() {
                         <ParkingSpotsGrid parkingSpots={parkingSpots} lot={chosenLot} />
                     )}
                 </div>
-
-                {showPayment && (
-                    <div className="payment-modal">
-                        <PaymentOptions
-                            onPaymentSuccess={handlePaymentSuccess}
-                            onCancel={() => setShowPayment(false)}
-                        />
-                    </div>
-                )}
             </main>
         </div>
     );

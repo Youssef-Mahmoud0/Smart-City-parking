@@ -1,15 +1,17 @@
 .payment-container {
-    width: 300px;
-    margin: 0 auto;
+    width: 400px;
+    margin: 50px auto;
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #f9f9f9;
     text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .payment-container h2 {
     margin-bottom: 20px;
+    font-size: 24px;
     color: #333;
 }
 
@@ -19,21 +21,30 @@
     margin-bottom: 20px;
 }
 
-.payment-option label {
+.payment-options label {
     font-size: 16px;
     cursor: pointer;
+    color: #555;
 }
 
 .visa-input {
     margin: 15px 0;
+    text-align: left;
 }
 
 .visa-input input {
-    width: 100%;
+    width: calc(100% - 16px);
     padding: 8px;
     margin-top: 5px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.visa-input input:focus {
+    border-color: #007bff;
 }
 
 .visa-input input.error {
@@ -44,27 +55,44 @@
     color: red;
     font-size: 14px;
     margin-top: 5px;
+    text-align: left;
 }
 
-.success-text {
-    color: green;
+.payment-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.payment-actions button {
+    flex: 1;
+    padding: 10px 15px;
     font-size: 16px;
-    margin-top: 15px;
-}
-
-.submit-button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    /* Blue color */
-    color: white;
+    margin: 0 5px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 16px;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-.submit-button:hover {
+.payment-actions button[type="button"] {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.payment-actions button[type="button"]:hover {
+    background-color: #ddd;
+}
+
+.payment-actions button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+}
+
+.payment-actions button[type="submit"]:hover {
     background-color: #0056b3;
-    /* Darker blue on hover */
+}
+
+.payment-actions button:active {
+    transform: scale(0.98);
 }

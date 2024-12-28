@@ -43,7 +43,10 @@ const ReservationsList = ({ reservations, onCheckIn, onCancel, onCheckout }) => 
 
             {showPayment && (
                 <div className="payment-modal">
-                    <PaymentOptions />
+                    <Payment 
+                        onCancel={() => setShowPayment(false)}
+                        onPaymentSuccess={() => setShowPayment(false)}
+                    />
                 </div>
             )}
         </div>
