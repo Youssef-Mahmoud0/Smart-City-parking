@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {
@@ -12,16 +12,21 @@ import {
     addDays,
     subDays,
 } from "date-fns";
+import Confirmation from "../confirmation/Confirmation"; // Import the modal component
+import { fetchReservationPrice } from "../../services/driverHomeService";
 
-const Calendar = ({ 
+const Calendar = ({
     spotData,
-    handleDeselectSpot, 
-    handleReservationFromParking
+    handleDeselectSpot,
+    handleReservationFromParking,
+    lot,
 }) => {
     const [selectedSpot] = useState(spotData); // Default to the first spot.
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const [currentDate, setCurrentDate] = useState(new Date());
+    const [reservationPrice, setReservationPrice] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
     const generateTimeSlots = (date) => {
         return Array.from({ length: 24 * 4 }, (_, i) =>
@@ -59,7 +64,7 @@ const Calendar = ({
         });
     };
 
-    const handleReserve = async () => {
+    const handleReserveClick = () => {
         if (!startTime || !endTime) {
             alert("Please select both start and end times.");
             return;
@@ -81,22 +86,23 @@ const Calendar = ({
             return;
         }
 
+        setIsModalOpen(true); // Show the confirmation modal
+    };
+
+    const handleConfirmReservation = async () => {
+        setIsModalOpen(false); // Close the modal
+
         const formattedStart = format(startTime, "yyyy-MM-dd'T'HH:mm:ss");
         const formattedEnd = format(endTime, "yyyy-MM-dd'T'HH:mm:ss");
 
         if (
             checkAvailability(formattedStart, formattedEnd, selectedSpot.reservations)
         ) {
-
-
-            await handleReservationFromParking(selectedSpot.spotId, formattedStart, formattedEnd);
-
-            // alert(
-            //     `Reservation confirmed from ${format(startTime, "HH:mm")} to ${format(
-            //         endTime,
-            //         "HH:mm"
-            //     )}.`
-            // );
+            await handleReservationFromParking(
+                selectedSpot.spotId,
+                formattedStart,
+                formattedEnd
+            );
         } else {
             alert("The selected time range is unavailable.");
         }
@@ -110,21 +116,49 @@ const Calendar = ({
         setCurrentDate((prev) => subDays(prev, 1));
     };
 
-    return (
-        <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
-            <button style={{
-                position: "absolute",
-                top: "10px",
-                right: "10px",
-                cursor: "pointer",
-                padding: "5px 10px",
-                border: "none",
-                borderRadius: "50%",
+    useEffect(() => {
+        const showReservationPrice = async (startTime, endTime) => {
+            if (!timesCheck(startTime, endTime)) return;
 
-            }} onClick={() => handleDeselectSpot()}>
+            const price = await fetchReservationPrice(
+                lot.lotId,
+                startTime,
+                endTime
+            );
+            setReservationPrice(price);
+        };
+
+        showReservationPrice(startTime, endTime);
+    }, [startTime, endTime]);
+
+    const timesCheck = (startTime, endTime) => {
+        const now = new Date();
+        if (!startTime || !endTime || isBefore(startTime, now)) {
+            return false;
+        }
+
+        const duration = (endTime - startTime) / 60000; // Convert ms to minutes
+        if (duration < 60 || duration > 1440) return false;
+
+        return true;
+    };
+
+    return (
+        <div style={{ padding: "20px", width: "100%", margin: "auto" }}>
+            <button
+                style={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "10px",
+                    cursor: "pointer",
+                    padding: "5px 10px",
+                    border: "none",
+                    borderRadius: "50%",
+                }}
+                onClick={() => handleDeselectSpot()}
+            >
                 X
             </button>
-
 
             <h2>
                 Spot ID: {selectedSpot.spotId} - {selectedSpot.type}
@@ -158,14 +192,35 @@ const Calendar = ({
                 />
             </div>
 
-            <button
-                onClick={handleReserve}
-                style={{ marginTop: "20px", padding: "10px 20px", cursor: "pointer" }}
+            <div
+                style={{
+                    marginTop: "10px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
             >
-                Reserve
-            </button>
+                {reservationPrice && <p>Reservation Price: {reservationPrice} $</p>}
+                <button
+                    onClick={handleReserveClick}
+                    style={{ margin: "15px auto", padding: "10px 20px", cursor: "pointer" }}
+                    disabled={!timesCheck(startTime, endTime)}
+                >
+                    Reserve
+                </button>
+            </div>
 
-            <h3>Time Slots for {format(currentDate, "yyyy-MM-dd")}</h3>
+            <Confirmation
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onConfirm={handleConfirmReservation}
+                message="Are you sure you want to reserve? Please note that any more than 30 minutes late will be considered a violation. The spot will no longer be reserved, and a penalty of 50% of the current price per hour will be applied."
+            />
+
+            <h3 style={{ marginBlock: "20px" }}>
+                Time Slots for {format(currentDate, "yyyy-MM-dd")}
+            </h3>
 
             <div
                 style={{
@@ -197,12 +252,14 @@ const Calendar = ({
                 }}
             >
                 {timeSlots.map((slot) => (
-                    <div    
+                    <div
                         key={slot}
                         style={{
                             padding: "10px",
                             border: "1px solid gray",
-                            backgroundColor: isReserved(slot) ? "lightcoral" : "lightgreen",
+                            backgroundColor: isReserved(slot)
+                                ? "lightcoral"
+                                : "lightgreen",
                             textAlign: "center",
                             fontSize: "12px",
                         }}

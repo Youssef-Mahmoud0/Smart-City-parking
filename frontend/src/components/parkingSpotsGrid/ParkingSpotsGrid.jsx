@@ -46,7 +46,6 @@ const ParkingLotGrid = ({ parkingSpots, lot, onSpotSelect }) => {
         setSelectedSpotOrder(spot.order);
 
         const spotReservations = await fetchSpotReservations(spot.spotId);       
-        console.log(spotReservations);
         spot.reservations = spotReservations;
 
         setSelectedSpot(spot);
@@ -54,11 +53,10 @@ const ParkingLotGrid = ({ parkingSpots, lot, onSpotSelect }) => {
 
     };
 
-    const handleReservationFromParking = async (spotId, startTime, endTime) => {
+    const handleReservationFromParking = async ( spotId, startTime, endTime) => {
 
         try {
-            const response = await reserveSpot(spotId, startTime, endTime);
-            console.log(response);
+            const response = await reserveSpot(lot.lotId, spotId, startTime, endTime);
             setSelectedSpot(null);
             setSelectedSpotId(null);
             setSelectedSpotOrder(null);
@@ -78,6 +76,11 @@ const ParkingLotGrid = ({ parkingSpots, lot, onSpotSelect }) => {
         setSelectedSpotOrder(null);
     }
 
+
+
+
+
+
     return (
         <div className="parking-lot-container">
             <div className="header">
@@ -90,7 +93,7 @@ const ParkingLotGrid = ({ parkingSpots, lot, onSpotSelect }) => {
             </div>
 
             <div className="grid-layout">
-                {parkingSpots.map((spot) => (
+                {parkingSpots.map((spot, index) => (
                     <div
                         key={spot.spotId}
                         className={`spot ${getSpotColorClass(spot.status, spot.spotId == selectedSpotId)}-container`}
@@ -157,6 +160,7 @@ const ParkingLotGrid = ({ parkingSpots, lot, onSpotSelect }) => {
                     <div className="calender-container">
                         <Calender 
                             spotData={selectedSpot} 
+                            lot={lot}
                             handleDeselectSpot={handleDeselectSpot}
                             handleReservationFromParking={handleReservationFromParking}
                         />

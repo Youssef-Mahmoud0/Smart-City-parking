@@ -1,13 +1,10 @@
-package com.databaseProject.backend.entity;
+package com.databaseProject.backend.dto;
+
 import com.databaseProject.backend.enums.PaymentType;
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
-import java.sql.Timestamp;
-
-@Component
 @Data
-public class Driver {
+public class DriverDto {
 
     private int driverId;
     private String licensePlateNumber;
@@ -15,6 +12,6 @@ public class Driver {
     private String email;
     private String phoneNumber;
     private PaymentType paymentMethod;
-    private String password;
     private double penalty;
+
 }

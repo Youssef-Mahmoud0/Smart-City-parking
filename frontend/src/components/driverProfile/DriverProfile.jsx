@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './DriverProfile.css';
 
-function DriverProfile() {
+function DriverProfile({driver}) {
 
     const driverData = {
         name: 'John Doe',
@@ -17,24 +17,33 @@ function DriverProfile() {
                 <div className="profile-info">
                     <div className="info-group">
                         <label>Name:</label>
-                        <span>{driverData.name}</span>
+                        <span>{driver.name}</span>
+                    </div>
+                    <div className="info-group">
+                        <label>Email:</label>
+                        <span>{driver.email}</span>
                     </div>
                     <div className="info-group">
                         <label>Phone:</label>
-                        <span>{driverData.phoneNumber}</span>
+                        <span>{driver.phoneNumber}</span>
                     </div>
                     <div className="info-group">
                         <label>License Number:</label>
-                        <span>{driverData.licenseNumber}</span>
-                    </div>
-                    <div className="info-group">
-                        <label>License Plate:</label>
-                        <span>{driverData.licensePlate}</span>
+                        <span>{driver.licensePlateNumber}</span>
                     </div>
                     <div className="info-group">
                         <label>Payment Method:</label>
-                        <span>{driverData.paymentMethod}</span>
+                        <span> {driver.paymentMethod.charAt(0).toUpperCase() + driver.paymentMethod.slice(1).toLowerCase()}</span>
                     </div>
+                    {
+                        driver.penalty > 0 &&
+                        <div className="info-group">
+                            <label>Penalty:</label>
+                            <span>You owe us {driver.penalty} pounds</span>
+                        </div>
+                    }
+                    
+
                 </div>
             ) : (
                 <div>No driver data available</div>

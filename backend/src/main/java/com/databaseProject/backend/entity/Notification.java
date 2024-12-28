@@ -5,14 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Data
 public class Notification {
 
-    int notificationID;
+    int notificationId;
 
-    int driverID;
+    int driverId;
 
     String message;
 
