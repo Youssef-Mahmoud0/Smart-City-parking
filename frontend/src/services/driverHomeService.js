@@ -64,12 +64,14 @@ export async function fetchParkingSpots(lotId) {
 }
 
 
-export async function reserveSpot(spotId, startTime, endTime) {
+export async function reserveSpot(lotId, spotId, startTime, endTime) {
     startTime = startTime.replace('T', ' ');
     endTime = endTime.replace('T', ' ');
 
 
-    const response = await fetch(`${url}/1/spots/${spotId}/reserve`,
+    console.log("inside reserve",startTime, endTime);
+
+    const response = await fetch(`${url}/${lotId}/spots/${spotId}/reserve`,
         {
             method: 'POST',
             credentials: 'include',
@@ -108,6 +110,83 @@ export async function fetchSpotReservations(spotId) {
     }
 
     const reservations = await response.json();
+    reservations.forEach(reservation => {
+        reservation.startTime = reservation.strStartTime;
+        reservation.endTime = reservation.strEndTime;
+    })
+
+    console.log("This is the fetch in the frontend ",reservations);
     // console.log(reservations);
     return reservations;
+}
+
+
+
+export async function fetchReservationPrice(lotId, startTime, endTime) {
+    console.log("inside fetch",startTime, endTime);
+    const response = await fetch(`${url}/lot/${lotId}/price?startTime=${startTime}&endTime=${endTime}`,
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+    if (!response.ok) {
+        // throw new Error('An error occurred while fetching the reservation price');
+    }
+
+    // const price = await response.json();
+
+    // console.log(price);
+    // return price? price : 100;
+
+    return 100;
+}
+
+
+export async function fetchReservations() {
+    const response = await fetch(`${url}/reservations`,
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+    if (!response.ok) {
+        throw new Error('An error occurred while fetching the reservations');
+    }
+
+    const reservations = await response.json();
+    
+    reservations.forEach(reservation => {
+        reservation.startTime = reservation.strStartTime;
+        reservation.endTime = reservation.strEndTime;
+    })
+    
+    console.log("this is the reservations object",reservations);
+    return reservations;
+}
+
+
+export async function cancelReservation(reservation) {
+    const response = await fetch(`${url}/spots/${reservation.spotId}/cancel`,
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+
+    if (!response.ok) {
+        throw new Error('An error occurred while canceling the reservation');
+    }
+
+    const result = await response.text();
+    return result;
 }

@@ -27,9 +27,9 @@ public class ReservationRepository {
     }
 
     // price is a placeholder for now
-    public void createReservation(int spotId, Timestamp startTime, Timestamp endTime, int driverId) {
-        String reservationSql = "INSERT INTO reservation (spot_id, start_time, end_time, driver_id, status, price) VALUES (?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(reservationSql, spotId, startTime, endTime, driverId, "WAITING_FOR_ARRIVAL", 0.0);
+    public void createReservation(int lotId, int spotId, Timestamp startTime, Timestamp endTime, int driverId) {
+        String reservationSql = "INSERT INTO reservation (lot_id, spot_id, start_time, end_time, driver_id, status, price) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(reservationSql, lotId ,spotId, startTime, endTime, driverId, "WAITING_FOR_ARRIVAL", 0.0);
 
         String updateSpotStatusSql = "UPDATE parking_spot SET status = 'RESERVED' WHERE spot_id = ?";
         jdbcTemplate.update(updateSpotStatusSql, spotId);
@@ -58,12 +58,15 @@ public class ReservationRepository {
     }
 
     public List<ReservationDto> getReservationsById(int driverId) {
-        String getReservationsSql = "SELECT * FROM reservation WHERE driver_id = ?";
+        String getReservationsSql = """
+            SELECT * FROM reservation WHERE driver_id = ? AND status IN ('WAITING_FOR_ARRIVAL', 'DRIVER_ARRIVED')
+            AND end_time >= NOW()
+        """;
         return jdbcTemplate.query(getReservationsSql, new Object[]{driverId}, new ReservationMapper());
     }
 
     public List<ReservationDto> getReservationsBySpotId(int spotId) {
-        String getReservationsSql = "SELECT * FROM reservation WHERE spot_id = ?";
+        String getReservationsSql = "SELECT * FROM reservation WHERE spot_id = ? AND status NOT IN ('CANCELLED', 'COMPLETED')";
         return jdbcTemplate.query(getReservationsSql, new Object[]{spotId}, new ReservationMapper());
     }
 }

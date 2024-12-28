@@ -15,4 +15,5 @@ public class Driver {
     private String phoneNumber;
     private PaymentType paymentMethod;
     private String password;
+    private double penalty;
 }

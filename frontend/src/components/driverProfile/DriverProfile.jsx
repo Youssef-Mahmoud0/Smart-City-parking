@@ -33,7 +33,7 @@ function DriverProfile({driver}) {
                     </div>
                     <div className="info-group">
                         <label>Payment Method:</label>
-                        <span>{driver.paymentMethod}</span>
+                        <span> {driver.paymentMethod.charAt(0).toUpperCase() + driver.paymentMethod.slice(1).toLowerCase()}</span>
                     </div>
                     {
                         driver.penalty > 0 &&

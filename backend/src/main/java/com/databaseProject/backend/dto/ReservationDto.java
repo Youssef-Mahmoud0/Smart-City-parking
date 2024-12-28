@@ -62,6 +62,22 @@ public class ReservationDto {
         this.penalty = penalty;
     }
 
+    public String getStrStartTime() {
+        return strStartTime;
+    }
+
+    public void setStrStartTime(String strStartTime) {
+        this.strStartTime = strStartTime;
+    }
+
+    public String getStrEndTime() {
+        return strEndTime;
+    }
+
+    public void setStrEndTime(String strEndTime) {
+        this.strEndTime = strEndTime;
+    }
+
     private int spotId;
     private int driverId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
@@ -71,4 +87,7 @@ public class ReservationDto {
     private ReservationStatus status;
     private double price;
     private double penalty;
+    private String strStartTime;
+    private String strEndTime;
+
 }
