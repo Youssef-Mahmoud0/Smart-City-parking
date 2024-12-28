@@ -75,11 +75,11 @@ public class ReservationController {
         }
     }
 
-    @PostMapping("/spots/{spotId}/cancel")
-    public ResponseEntity<?> cancelSpot(@PathVariable int spotId, @PathVariable int driverId, HttpServletRequest request) {
+    @PostMapping("/{reservationId}/spots/{spotId}/cancel")
+    public ResponseEntity<?> cancelSpot(@PathVariable int reservationId, @PathVariable int spotId, HttpServletRequest request) {
         try {
-//            int driverId = (int) request.getAttribute("id");
-            reservationService.cancelReservation(spotId, driverId);
+            int driverId = (int) request.getAttribute("id");
+            reservationService.cancelReservation(reservationId, spotId, driverId);
             return ResponseEntity.status(HttpStatus.OK).body("Reservation cancelled successfully.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -88,11 +88,11 @@ public class ReservationController {
         }
     }
 
-    @PostMapping("/spots/{spotId}/complete")
-    public ResponseEntity<?> completeSpot(@PathVariable int spotId, HttpServletRequest request) {
+    @PostMapping("/{reservationId}/spots/{spotId}/complete")
+    public ResponseEntity<?> completeSpot(@PathVariable int reservationId, @PathVariable int spotId, HttpServletRequest request) {
         try {
             int driverId = (int) request.getAttribute("id");
-            reservationService.completeReservation(spotId, driverId);
+            reservationService.completeReservation(reservationId, spotId, driverId);
             return ResponseEntity.status(HttpStatus.OK).body("Spot completed successfully.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -133,4 +133,19 @@ public class ReservationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    // from waiting to arrived and from reserved to occupied
+    @PostMapping("/{reservationId}/spots/{spotId}/checkin")
+    public ResponseEntity<?> checkIn(@PathVariable int reservationId, @PathVariable int spotId, HttpServletRequest request) {
+        try {
+            int driverId = (int) request.getAttribute("id");
+            reservationService.checkIn(reservationId, spotId, driverId);
+            return ResponseEntity.status(HttpStatus.OK).body("Checked in successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 }

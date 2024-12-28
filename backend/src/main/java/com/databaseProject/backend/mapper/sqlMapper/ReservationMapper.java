@@ -12,6 +12,7 @@ public class ReservationMapper implements RowMapper<ReservationDto> {
     public ReservationDto mapRow(ResultSet rs, int rowNum) throws SQLException {
         ReservationDto reservationDto = new ReservationDto();
 
+        reservationDto.setReservationId(rs.getInt("reservation_id"));
         reservationDto.setDriverId(rs.getInt("driver_id"));
         reservationDto.setSpotId(rs.getInt("spot_id"));
         reservationDto.setStartTime(rs.getTimestamp("start_time"));

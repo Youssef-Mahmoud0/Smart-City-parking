@@ -67,13 +67,13 @@ public class ReservationService {
     }
 
     @Transactional
-    public void cancelReservation(int reservationId, int driverId) {
-        reservationRepository.cancelReservation(reservationId, driverId);
+    public void cancelReservation(int reservationId, int spotId, int driverId) {
+        reservationRepository.cancelReservation(reservationId, spotId, driverId);
     }
 
     @Transactional
-    public void completeReservation(int spotId, int driverId) {
-        reservationRepository.completeReservation(spotId, driverId);
+    public void completeReservation(int reservationId, int spotId, int driverId) {
+        reservationRepository.completeReservation(reservationId, spotId, driverId);
     }
 
     private void validateTimes(Timestamp startTime, Timestamp endTime) {
@@ -94,5 +94,9 @@ public class ReservationService {
 
     public List<ReservationDto> fetchAllReservationsForSpot(int spotId) {
         return reservationRepository.getReservationsBySpotId(spotId);
+    }
+
+    public void checkIn(int reservationId, int spotId, int driverId) {
+        reservationRepository.checkIn(reservationId, spotId, driverId);
     }
 }

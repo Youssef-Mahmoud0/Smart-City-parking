@@ -78,6 +78,15 @@ public class ReservationDto {
         this.strEndTime = strEndTime;
     }
 
+    public int getReservationId() {
+        return reservationId;
+    }
+
+    public void setReservationId(int reservationId) {
+        this.reservationId = reservationId;
+    }
+
+    private int reservationId;
     private int spotId;
     private int driverId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
@@ -89,5 +98,4 @@ public class ReservationDto {
     private double penalty;
     private String strStartTime;
     private String strEndTime;
-
 }

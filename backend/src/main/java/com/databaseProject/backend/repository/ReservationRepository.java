@@ -35,23 +35,23 @@ public class ReservationRepository {
         jdbcTemplate.update(updateSpotStatusSql, spotId);
     }
 
-    public void cancelReservation(int spotId, int driverId) {
+    public void cancelReservation(int reservationId, int spotId, int driverId) {
         String lockSql = "SELECT status FROM parking_spot WHERE spot_id = ? FOR UPDATE";
         jdbcTemplate.queryForObject(lockSql, String.class, spotId);
 
-        String cancelReservationSql = "UPDATE reservation SET status = 'CANCELLED' WHERE spot_id = ? AND driver_id = ?";
-        jdbcTemplate.update(cancelReservationSql, spotId, driverId);
+        String cancelReservationSql = "UPDATE reservation SET status = 'CANCELLED' WHERE reservation_id = ? AND driver_id = ? AND spot_id = ?";
+        jdbcTemplate.update(cancelReservationSql, reservationId, driverId, spotId);
 
         String updateSpotStatusSql = "UPDATE parking_spot SET status = 'AVAILABLE' WHERE spot_id = ?";
         jdbcTemplate.update(updateSpotStatusSql, spotId);
     }
 
-    public void completeReservation(int spotId, int driverId) {
+    public void completeReservation(int reservationId, int spotId, int driverId) {
         String lockSql = "SELECT status FROM parking_spot WHERE spot_id = ? FOR UPDATE";
         jdbcTemplate.queryForObject(lockSql, String.class, spotId);
 
-        String completeReservationSql = "UPDATE reservation SET status = 'COMPLETED' WHERE spot_id = ? AND driver_id = ?";
-        jdbcTemplate.update(completeReservationSql, spotId, driverId);
+        String completeReservationSql = "UPDATE reservation SET status = 'COMPLETED' WHERE reservation_id = ? AND spot_id = ? AND driver_id = ?";
+        jdbcTemplate.update(completeReservationSql, reservationId, spotId, driverId);
 
         String updateSpotStatusSql = "UPDATE parking_spot SET status = 'AVAILABLE' WHERE spot_id = ?";
         jdbcTemplate.update(updateSpotStatusSql, spotId);
@@ -68,5 +68,17 @@ public class ReservationRepository {
     public List<ReservationDto> getReservationsBySpotId(int spotId) {
         String getReservationsSql = "SELECT * FROM reservation WHERE spot_id = ? AND status NOT IN ('CANCELLED', 'COMPLETED')";
         return jdbcTemplate.query(getReservationsSql, new Object[]{spotId}, new ReservationMapper());
+    }
+
+    // change spot status from reserved to occupied and reservation status from waiting for arrival to driver arrived
+    public void checkIn(int reservationId, int spotId, int driverId) {
+        String lockSql = "SELECT status FROM parking_spot WHERE spot_id = ? FOR UPDATE";
+        jdbcTemplate.queryForObject(lockSql, String.class, spotId);
+
+        String checkInSql = "UPDATE reservation SET status = 'DRIVER_ARRIVED' WHERE reservation_id = ? AND spot_id = ? AND driver_id = ?";
+        jdbcTemplate.update(checkInSql, reservationId, spotId, driverId);
+
+        String updateSpotStatusSql = "UPDATE parking_spot SET status = 'OCCUPIED' WHERE spot_id = ?";
+        jdbcTemplate.update(updateSpotStatusSql, spotId);
     }
 }
