@@ -3,6 +3,7 @@ package com.databaseProject.backend.controller;
 
 import com.databaseProject.backend.dto.*;
 import com.databaseProject.backend.entity.User;
+import com.databaseProject.backend.reports.ReportGenerator;
 import com.databaseProject.backend.service.AuthService;
 import com.databaseProject.backend.service.PasswordService;
 import com.databaseProject.backend.service.TokenService;
@@ -11,7 +12,9 @@ import com.databaseProject.backend.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,6 +38,9 @@ public class AuthController {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private ReportGenerator reportGenerator;
+
 
     @GetMapping("/users")
     public List<User> getAllUsers() {
@@ -48,6 +54,40 @@ public class AuthController {
         System.out.println("Creating user");
         return userService.createUser(user) ;
     }
+    @CrossOrigin(origins = "*")
+    @GetMapping("/generate-report-admin")
+    public ResponseEntity<byte[]> getPdfReport() {
+        try {
+            byte[] pdfBytes = reportGenerator.generateReport(true, 0);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", "application/pdf");
+            headers.add("Content-Disposition", "inline; filename=\"ParkingLotPerformanceReport.pdf\"");
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(pdfBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/generate-report-manager")
+    public ResponseEntity<byte[]> getPdfReportManager() {
+        try {
+            byte[] pdfBytes = reportGenerator.generateReport(false, 1);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", "application/pdf");
+            headers.add("Content-Disposition", "inline; filename=\"ParkingLotPerformanceReport.pdf\"");
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(pdfBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
     @PostMapping("/hash-password")
     public void hashPassword(@RequestBody String password) throws NoSuchAlgorithmException {
         System.out.println("Hashing password" + password);
@@ -60,6 +100,7 @@ public class AuthController {
         authService.driverSignUp(signUpRequest);
         System.out.println(signUpRequest.getPassword());
         System.out.println(signUpRequest.getEmail());
+        System.out.println(signUpRequest.getLicensePlateNumber().length());
         System.out.println(signUpRequest.getLicensePlateNumber());
         ResponseMessage responseMessage = new ResponseMessage("Email confirmation sent. Please verify your email.");
         return ResponseEntity.ok().body(responseMessage);

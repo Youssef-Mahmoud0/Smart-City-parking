@@ -1,37 +1,54 @@
 const backedURL = import.meta.env.VITE_BACKEND_URL;
 
 async function getManagerLots() {
-    const url = `${backedURL}/manager/lots/1`;
-    const response = await fetch(url, {
-        method: 'GET',
-        // credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
-    const data = await response.json();
-    console.log(data);
+  const url = `${backedURL}/manager`;
+  const response = await fetch(url, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+  console.log(data);
 
-    if (!response.ok)
-        throw new Error('Failed to fetch jobs');
-    
-    return data;
+  if (!response.ok) throw new Error("Failed to fetch jobs");
+
+  return data;
 }
 
 async function getLotReport(lotId) {
-    const url = `${backedURL}/manager/report/${lotId}`;
-    const response = await fetch(url, {
-        method: 'GET',
-        // credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
-    const data = await response.json();
-    console.log(data);
+  const url = "http://localhost:8080/auth/generate-report-manager";
 
-    if (!response.ok)
-        throw new Error('Failed to fetch jobs');
-    
-    return data;
+  const response = await fetch(url, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      Accept: "application/pdf",
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch report");
+  }
+  // Convert the response to a blob (binary data)
+  const blob = await response.blob();
+  return blob;
 }
+
+async function getSpotReservations(spotId) {
+  const url = `${backedURL}/manager/${spotId}`;
+  const response = await fetch(url, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+  console.log(data);
+  if (!response.ok) throw new Error("Failed to fetch jobs");
+
+  return data;
+}
+
+export { getManagerLots, getLotReport, getSpotReservations };

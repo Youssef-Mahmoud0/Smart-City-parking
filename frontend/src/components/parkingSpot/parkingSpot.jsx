@@ -1,8 +1,29 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import "./parkingSpot.css";
-
+import {getSpotReservations} from "../../services/managerService";
 export default function ParkingSpot({spot}) {
     const [showDetails, setShowDetails] = useState(false);
+    const [reservations, setReservations] = useState([{
+        reservationId: "",
+        startTime: "",
+        endTime: "",
+        driver: {
+            driverId: "",
+            name: "",
+            plateNumber: ""
+        },
+        status: "",
+    }]);
+    const handleShowDetails = async () => {
+        setShowDetails(true);
+        try {
+            const fetchedSpotReservations = await getSpotReservations(spot.spotId);
+            setReservations(fetchedSpotReservations);
+        } catch (error) {
+            console.error("Error fetching lots:", error);
+        } 
+    }
+
     return (
         <div className="parking-spot">
             <h4>Parking Spot</h4>
@@ -17,7 +38,7 @@ export default function ParkingSpot({spot}) {
                     <div className="spot-reservations">
                         <h4>Reservations</h4>
                         <ul>
-                            {spot.reservations.map((reservation) => {
+                            {reservations.map((reservation) => {
                                 return (
                                     <li key={reservation.reservationId} className="reservation">
                                         <div className="reservation-info">
@@ -25,6 +46,8 @@ export default function ParkingSpot({spot}) {
                                             <p>Start Time: {reservation.startTime}</p>
                                             <p>End Time: {reservation.endTime}</p>
                                             <p>Status: {reservation.status}</p>
+                                            <p>Price: {reservation.price}</p>
+                                            <p>Penality: {reservation.penality}</p>
                                         </div>
                                         <div className="driver-info">
                                             <h4>Driver Info</h4>
@@ -41,7 +64,7 @@ export default function ParkingSpot({spot}) {
                 {
                     showDetails?
                     <button onClick={() => setShowDetails(false)}>Hide Reservations</button>:
-                    <button onClick={() => setShowDetails(true)}>Show Reservations</button>
+                    <button onClick={() => handleShowDetails()}>Show Reservations</button>
                 }
             </div>
         </div>
