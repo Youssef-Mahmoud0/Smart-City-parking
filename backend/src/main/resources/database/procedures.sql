@@ -251,7 +251,7 @@ BEGIN
         SELECT r.spot_id, r.lot_id, r.driver_id
         FROM reservation r
         WHERE r.status = 'DRIVER_ARRIVED'
-          AND TIMESTAMPDIFF(MINUTE, r.end_time, NOW()) <= 5;
+          AND TIMESTAMPDIFF(MINUTE, r.end_time, NOW()) = 5;
 
     -- Declare continue handler for cursor NOT FOUND
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;

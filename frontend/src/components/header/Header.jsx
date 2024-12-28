@@ -37,7 +37,7 @@ function Header({ title }) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                type: notification.type === 'error' ? 'confirmation' : 'success'
+                type: notification.type === 'PENALTY' ? 'error' : 'message'
             });
             handleGetNotifications()
         };
@@ -76,9 +76,9 @@ function Header({ title }) {
                             {notifications.map((notification, index) => (
                                 <div key={index} className="notification-item">
                                     <div className="notification-type">
-                                        {notification.type == 'penality' ?
+                                        {notification.type == 'PENALTY' ?
                                           <i className="fa-solid fa-money-bill-trend-up penality"></i>  :  
-                                          <i className="fa-solid fa-circle-check confirmation"></i>
+                                          <i class="fa-solid fa-envelope confirmation"></i>
                                         }
                                     </div>
                                     <div className="notification-body">
