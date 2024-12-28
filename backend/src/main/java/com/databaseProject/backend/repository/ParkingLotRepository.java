@@ -41,4 +41,15 @@ public class ParkingLotRepository {
         """;
         return jdbcTemplate.query(sql, new Object[]{lotId}, new SpotReservationMapper());
     }
+
+    public List<ParkingLotDto> getLotsAndSpotsByManagerId(int mgrId) {
+        String lotSql = "SELECT * FROM parking_lot WHERE mgr_id = ?";
+        List<ParkingLotDto> parkingLots = jdbcTemplate.query(lotSql, new Object[]{mgrId}, new ParkingLotMapper());
+        for (ParkingLotDto lot : parkingLots) {
+            String spotSql = "SELECT * FROM parking_spot WHERE lot_id = ?";
+            List<ParkingSpotDto> parkingSpots = jdbcTemplate.query(spotSql, new Object[]{lot.getLotId()}, new ParkingSpotMapper());
+            lot.setSpots(parkingSpots);
+        }
+        return parkingLots;
+    }
 }

@@ -1,7 +1,10 @@
 package com.databaseProject.backend.repository;
 
 import com.databaseProject.backend.dto.ReservationDto;
+import com.databaseProject.backend.dto.SpotReservationDto;
 import com.databaseProject.backend.mapper.sqlMapper.ReservationMapper;
+import com.databaseProject.backend.mapper.sqlMapper.ReservationWithDriverMapper;
+import com.databaseProject.backend.mapper.sqlMapper.SpotReservationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

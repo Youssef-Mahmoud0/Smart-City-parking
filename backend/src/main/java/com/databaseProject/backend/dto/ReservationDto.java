@@ -6,6 +6,27 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.sql.Timestamp;
 
 public class ReservationDto {
+    private int spotId;
+    private int lotId;
+    private int driverId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private Timestamp startTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private Timestamp endTime;
+    private ReservationStatus status;
+    private double price;
+    private double penalty;
+    private DriverDto driver;
+
+
+    public DriverDto getDriver() {
+        return driver;
+    }
+
+    public void setDriver(DriverDto driver) {
+        this.driver = driver;
+    }
+
     public int getSpotId() {
         return spotId;
     }
