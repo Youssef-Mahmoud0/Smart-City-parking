@@ -6,6 +6,17 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.sql.Timestamp;
 
 public class ReservationDto {
+    private int spotId;
+    private int lotId;
+    private int driverId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private Timestamp startTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private Timestamp endTime;
+    private ReservationStatus status;
+    private double price;
+    private double penalty;
+
     public int getSpotId() {
         return spotId;
     }
@@ -62,13 +73,12 @@ public class ReservationDto {
         this.penalty = penalty;
     }
 
-    private int spotId;
-    private int driverId;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private Timestamp startTime;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private Timestamp endTime;
-    private ReservationStatus status;
-    private double price;
-    private double penalty;
+
+    public int getLotId() {
+        return lotId;
+    }
+
+    public void setLotId(int lotId) {
+        this.lotId = lotId;
+    }
 }

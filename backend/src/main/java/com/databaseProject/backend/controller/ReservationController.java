@@ -1,9 +1,6 @@
 package com.databaseProject.backend.controller;
 
-import com.databaseProject.backend.dto.ParkingLotDto;
-import com.databaseProject.backend.dto.ParkingSpotDto;
-import com.databaseProject.backend.dto.ReservationDto;
-import com.databaseProject.backend.dto.ReservationRequest;
+import com.databaseProject.backend.dto.*;
 import com.databaseProject.backend.service.ReservationService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,15 +47,16 @@ public class ReservationController {
         }
     }
 
-    @PostMapping("/{driverId}/spots/{spotId}/reserve")
+    @PostMapping("/{lotId}/{driverId}/spots/{spotId}/reserve")
     public ResponseEntity<?> reserveSpot(@PathVariable int spotId,
+                                         @PathVariable int lotId,
                                          @RequestBody ReservationRequest reservationRequest,
                                          @PathVariable int driverId,
                                          HttpServletRequest request) {
         try {
             Timestamp startTime = Timestamp.valueOf(reservationRequest.getStartTime());
             Timestamp endTime = Timestamp.valueOf(reservationRequest.getEndTime());
-            reservationService.reserveSpot(spotId, startTime, endTime, driverId);
+            reservationService.reserveSpot(lotId,spotId, startTime, endTime, driverId);
             return ResponseEntity.status(HttpStatus.OK).body("Spot reserved successfully.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -108,6 +106,21 @@ public class ReservationController {
     public ResponseEntity<?> fetchAllReservationsForSpot(@PathVariable int spotId) {
         try {
             List<ReservationDto> result = reservationService.fetchAllReservationsForSpot(spotId);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+
+
+
+    // MANAGERS ONLY
+    @GetMapping("/manager/{mgrId}")
+    public ResponseEntity<?> fetchAllLotsAndSpotsForManager(@PathVariable int mgrId, HttpServletRequest request) {
+        try {
+//            int mgrId = (int) request.getAttribute("id");
+            List<ParkingLotDto> result = reservationService.fetchAllLotsAndSpotsForManager(mgrId);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

@@ -1,9 +1,6 @@
 package com.databaseProject.backend.service;
 
-import com.databaseProject.backend.dto.ParkingLotDto;
-import com.databaseProject.backend.dto.ParkingSpotDto;
-import com.databaseProject.backend.dto.ReservationDto;
-import com.databaseProject.backend.dto.SpotReservationDto;
+import com.databaseProject.backend.dto.*;
 import com.databaseProject.backend.repository.ParkingLotRepository;
 import com.databaseProject.backend.repository.ReservationRepository;
 import jakarta.servlet.http.Cookie;
@@ -56,14 +53,14 @@ public class ReservationService {
     }
 
     @Transactional
-    public void reserveSpot(int spotId, Timestamp startTime, Timestamp endTime, int driverId) {
+    public void reserveSpot(int lotId, int spotId, Timestamp startTime, Timestamp endTime, int driverId) {
         validateTimes(startTime, endTime);
 
         boolean isOverlapping = reservationRepository.checkOverlapping(spotId, startTime, endTime);
         if (isOverlapping) throw new IllegalArgumentException("Reservation overlaps with an existing reservation.");
 
         if (driverId == -1) throw new RuntimeException("Driver not logged in.");
-        reservationRepository.createReservation(spotId, startTime, endTime, driverId);
+        reservationRepository.createReservation(lotId, spotId, startTime, endTime, driverId);
     }
 
     @Transactional
@@ -94,5 +91,9 @@ public class ReservationService {
 
     public List<ReservationDto> fetchAllReservationsForSpot(int spotId) {
         return reservationRepository.getReservationsBySpotId(spotId);
+    }
+
+    public List<ParkingLotDto> fetchAllLotsAndSpotsForManager(int mgrId) {
+        return parkingLotRepository.getLotsAndSpotsByManagerId(mgrId);
     }
 }

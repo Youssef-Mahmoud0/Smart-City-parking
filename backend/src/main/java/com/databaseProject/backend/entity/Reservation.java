@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 @Data
 public class Reservation {
     private int spotId;
+    private int lotId;
     private int driverId;
     private Timestamp startTime;
     private Timestamp endTime;

@@ -14,6 +14,7 @@ public class ReservationMapper implements RowMapper<ReservationDto> {
 
         reservationDto.setDriverId(rs.getInt("driver_id"));
         reservationDto.setSpotId(rs.getInt("spot_id"));
+        reservationDto.setLotId(rs.getInt("lot_id"));
         reservationDto.setStartTime(rs.getTimestamp("start_time"));
         reservationDto.setEndTime(rs.getTimestamp("end_time"));
         reservationDto.setStatus(ReservationStatus.valueOf(rs.getString("status")));

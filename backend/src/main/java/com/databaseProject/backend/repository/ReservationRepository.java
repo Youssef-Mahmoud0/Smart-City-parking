@@ -1,9 +1,10 @@
 package com.databaseProject.backend.repository;
 
 import com.databaseProject.backend.dto.ReservationDto;
+import com.databaseProject.backend.dto.SpotReservationDto;
 import com.databaseProject.backend.mapper.sqlMapper.ReservationMapper;
+import com.databaseProject.backend.mapper.sqlMapper.SpotReservationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -27,9 +28,9 @@ public class ReservationRepository {
     }
 
     // price is a placeholder for now
-    public void createReservation(int spotId, Timestamp startTime, Timestamp endTime, int driverId) {
-        String reservationSql = "INSERT INTO reservation (spot_id, start_time, end_time, driver_id, status, price) VALUES (?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(reservationSql, spotId, startTime, endTime, driverId, "WAITING_FOR_ARRIVAL", 0.0);
+    public void createReservation(int lotId, int spotId, Timestamp startTime, Timestamp endTime, int driverId) {
+        String reservationSql = "INSERT INTO reservation (lot_id, spot_id, start_time, end_time, driver_id, status, price) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(reservationSql, lotId, spotId, startTime, endTime, driverId, "WAITING_FOR_ARRIVAL", 0.0);
 
         String updateSpotStatusSql = "UPDATE parking_spot SET status = 'RESERVED' WHERE spot_id = ?";
         jdbcTemplate.update(updateSpotStatusSql, spotId);
