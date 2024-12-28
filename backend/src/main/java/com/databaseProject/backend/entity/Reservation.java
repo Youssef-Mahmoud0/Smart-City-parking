@@ -9,11 +9,12 @@ import java.sql.Timestamp;
 @Component
 @Data
 public class Reservation {
-    private int reservationId;
-    private int driverId;
     private int spotId;
+    private int lotId;
+    private int driverId;
     private Timestamp startTime;
     private Timestamp endTime;
     private ReservationStatus status;
-//    private Timestamp expectedEndTime;
+    private double price;
+    private double penalty;
 }

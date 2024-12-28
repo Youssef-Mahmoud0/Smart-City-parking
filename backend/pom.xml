@@ -85,6 +85,12 @@
 			<version>0.11.5</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>1.5.3</version> <!-- Use the latest compatible version -->
+		</dependency>
+
 
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>

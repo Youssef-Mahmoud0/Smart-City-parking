@@ -11,7 +11,6 @@ public class ParkingSpotDto {
     private int lotId;
     private SpotType type;
     private SpotStatus status;
-    private short order;
     private List<SpotReservationDto> reservations = new ArrayList<>();
 
 
@@ -22,7 +21,6 @@ public class ParkingSpotDto {
     public void setReservations(List<SpotReservationDto> reservations) {
         this.reservations = reservations;
     }
-
 
     public int getSpotId() {
         return spotId;
@@ -54,13 +52,5 @@ public class ParkingSpotDto {
 
     public void setStatus(SpotStatus status) {
         this.status = status;
-    }
-
-    public short getOrder() {
-        return order;
-    }
-
-    public void setOrder(short order) {
-        this.order = order;
     }
 }

@@ -11,8 +11,8 @@ public class NotificationMapper implements RowMapper<Notification> {
     @Override
     public Notification mapRow(ResultSet rs, int rowNum) throws SQLException {
         Notification notification = new Notification();
-        notification.setNotificationID(rs.getInt("notification_id"));
-        notification.setDriverID(rs.getInt("driver_id"));
+        notification.setNotificationId(rs.getInt("notification_id"));
+        notification.setDriverId(rs.getInt("driver_id"));
         notification.setMessage(rs.getString("message"));
         notification.setCreatedAt(rs.getTimestamp("created_at"));
         notification.setSeen(rs.getBoolean("seen"));

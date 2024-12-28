@@ -46,3 +46,26 @@
     align-items: center;
     justify-content: center;
 }
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    background-color:  #1a73e8;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.pagination button.active {
+    background-color: #0f5ba7;
+}
+
+.pagination button:hover {
+    background-color: #0f5ba7;
+}
+

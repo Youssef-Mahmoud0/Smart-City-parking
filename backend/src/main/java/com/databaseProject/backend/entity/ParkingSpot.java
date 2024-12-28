@@ -12,5 +12,4 @@ public class ParkingSpot {
     private int lotId;
     private SpotType type;
     private SpotStatus status;
-    private short order;
 }

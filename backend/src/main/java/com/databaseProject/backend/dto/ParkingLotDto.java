@@ -1,5 +1,8 @@
 package com.databaseProject.backend.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ParkingLotDto {
     private int lotId;
     private int mgrId;
@@ -8,6 +11,7 @@ public class ParkingLotDto {
     private double longitude;
     private int capacity;
     private double basePrice;
+    private List<ParkingSpotDto> spots = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -63,5 +67,13 @@ public class ParkingLotDto {
 
     public void setBasePrice(double basePrice) {
         this.basePrice = basePrice;
+    }
+
+    public List<ParkingSpotDto> getSpots() {
+        return spots;
+    }
+
+    public void setSpots(List<ParkingSpotDto> spots) {
+        this.spots = spots;
     }
 }

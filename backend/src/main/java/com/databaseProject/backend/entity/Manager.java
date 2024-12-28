@@ -12,6 +12,4 @@ public class Manager {
         private String email;
         private String password;
         private String phoneNumber;
-        private Timestamp createdAt;
-        private Timestamp updatedAt;
 }
