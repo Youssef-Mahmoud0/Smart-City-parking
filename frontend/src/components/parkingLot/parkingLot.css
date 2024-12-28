@@ -55,17 +55,17 @@
 .pagination button {
     margin: 0 5px;
     padding: 5px 10px;
-    background-color: #4ea685;
+    background-color:  #1a73e8;
     color: white;
     border: none;
     cursor: pointer;
 }
 
 .pagination button.active {
-    background-color: #2e8b57;
+    background-color: #0f5ba7;
 }
 
 .pagination button:hover {
-    background-color: #45a089;
+    background-color: #0f5ba7;
 }
 

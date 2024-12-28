@@ -26,7 +26,7 @@ function LoginForm({ onLogin }) {
         } else if (response.type === "manager") {
           window.location.href = "/manager/home";
         } else if (response.type === "admin") {
-          // Redirect to the admin dashboard
+          window.location.href = "/admin/home";
         }
       } else {
         setFailureResponse(response.message);
