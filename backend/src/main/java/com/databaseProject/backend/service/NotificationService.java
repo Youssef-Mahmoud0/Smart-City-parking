@@ -35,7 +35,7 @@ public class NotificationService {
 
         Notification notification = new Notification();
         for (Integer driverID : startedReservations) {
-            notification.setDriverID(driverID);
+            notification.setDriverId(driverID);
             notification.setMessage("Your reservation has started");
             notification.setType("MESSAGE");
             System.out.println("Sending notification to driver " + driverID);
@@ -43,7 +43,7 @@ public class NotificationService {
         }
 
         for (Integer driverID : endedReservations) {
-            notification.setDriverID(driverID);
+            notification.setDriverId(driverID);
             notification.setMessage("Your reservation has ended");
             notification.setType("MESSAGE");
             System.out.println("Sending notification to driver " + driverID);
@@ -52,7 +52,7 @@ public class NotificationService {
         }
 
         for (Integer driverID : exceeded30MinReservations) {
-            notification.setDriverID(driverID);
+            notification.setDriverId(driverID);
             notification.setMessage("Your reservation has exceeded 30 minutes");
             notification.setType("MESSAGE");
 
@@ -61,7 +61,7 @@ public class NotificationService {
         }
 
         for (Integer driverID : reservationsEndsIn5Min) {
-            notification.setDriverID(driverID);
+            notification.setDriverId(driverID);
             notification.setMessage("Your reservation will end in 5 minutes");
             notification.setType("MESSAGE");
 

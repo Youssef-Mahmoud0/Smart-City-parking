@@ -1,4 +1,6 @@
 let url = import.meta.env.VITE_BACKEND_URL;
+import { format } from "date-fns";
+
 
 export async function fetchDriver() {
     const response = await fetch(`${url}/driver`,
@@ -123,8 +125,20 @@ export async function fetchSpotReservations(spotId) {
 
 
 export async function fetchReservationPrice(lotId, startTime, endTime) {
+
     console.log("inside fetch",startTime, endTime);
-    const response = await fetch(`${url}/lot/${lotId}/price?startTime=${startTime}&endTime=${endTime}`,
+
+    // startTime = startTime.replace('T', ' ');
+    // endTime = endTime.replace('T', ' ');
+
+    startTime = format(startTime, "yyyy-MM-dd HH:mm:ss");
+    endTime = format(endTime, "yyyy-MM-dd HH:mm:ss");
+
+    console.log("inside fetch",startTime, endTime);
+
+    
+
+    const response = await fetch(`${url}/lots/${lotId}/price?startTime=${startTime}&endTime=${endTime}`,
         {
             method: 'GET',
             credentials: 'include',
@@ -137,11 +151,12 @@ export async function fetchReservationPrice(lotId, startTime, endTime) {
         // throw new Error('An error occurred while fetching the reservation price');
     }
 
-    // const price = await response.json();
+    const price = await response.text();
 
-    // console.log(price);
+    
+
+    // console.log("this is the returned price", price);
     // return price? price : 100;
-
     return 100;
 }
 

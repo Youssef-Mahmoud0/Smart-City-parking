@@ -57,7 +57,6 @@ public class ReservationController {
     public ResponseEntity<?> reserveSpot(@PathVariable int spotId,
                                          @PathVariable int lotId,
                                          @RequestBody ReservationRequest reservationRequest,
-                                         @PathVariable int driverId,
                                          HttpServletRequest request) {
 //        System.out.println("Reserve spot request received.");
 //        System.out.println("Spot ID: " + spotId);
@@ -142,11 +141,15 @@ public class ReservationController {
         }
     }
 
-    @GetMapping("/reservations/{reservationId}")
+    @GetMapping("/lots/{lotId}/price")
     public ResponseEntity<?> getReservationPrice(@PathVariable(name="lotId") int lotId,
-                                                 @PathVariable(name="startTime")Timestamp startTime,
-                                                 @PathVariable(name="endTime")Timestamp endTime){
+                                                 @RequestParam(name="startTime")Timestamp startTime,
+                                                 @RequestParam(name="endTime")Timestamp endTime){
         try {
+
+            System.out.println("Getting price for lot: " + startTime + " " + endTime);
+
+
             double price = reservationService.getReservationPrice(lotId, startTime, endTime);
             return ResponseEntity.status(HttpStatus.OK).body(price);
         } catch (RuntimeException e) {
