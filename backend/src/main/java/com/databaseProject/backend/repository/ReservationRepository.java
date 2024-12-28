@@ -16,6 +16,13 @@ public class ReservationRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    // allow reservation if the status is AVAILABLE applying concurrency control (SELECT ... FOR UPDATE)
+//    public boolean isSpotAvailableWithLock(int spotId) {
+//        String sql = "SELECT status FROM parking_spot WHERE spot_id = ? FOR UPDATE";
+//        String status = jdbcTemplate.queryForObject(sql, String.class, spotId);
+//        return "AVAILABLE".equals(status);
+//    }
+
     public boolean checkOverlapping(int spotId, Timestamp startTime, Timestamp endTime) {
         String sql = "SELECT COUNT(*) FROM reservation " +
                      "WHERE spot_id = ? " +
@@ -68,6 +75,15 @@ public class ReservationRepository {
     public List<ReservationDto> getReservationsBySpotId(int spotId) {
         String getReservationsSql = "SELECT * FROM reservation WHERE spot_id = ? AND status NOT IN ('CANCELLED', 'COMPLETED')";
         return jdbcTemplate.query(getReservationsSql, new Object[]{spotId}, new ReservationMapper());
+    }
+
+    public int getReservationPrice(int spotId, Timestamp startTime, Timestamp endTime) {
+        String sql = "{call get_dynamic_spot_price(?, ?, ?, ?)}";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{spotId, startTime, endTime}, Integer.class);
+        } catch (DataAccessException e) {
+            throw new RuntimeException("Failed to get reservation price.");
+        }
     }
 
     // change spot status from reserved to occupied and reservation status from waiting for arrival to driver arrived
