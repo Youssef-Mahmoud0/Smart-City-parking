@@ -1,15 +1,20 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import ParkingLot from "../../components/parkingLot/parkingLot";
-
+import {getManagerLots} from "../../services/managerService";
 function ManagerHomePage() {
-    const managerID = 1;
-    const [lots, setLots] = useState([{
-        name: "",
-        id: "",
-        location: "",
-        capacity: "",
-        basePrice: "",
-    }]);
+    const [lots, setLots] = useState([]);
+        useEffect(() => {
+            const getLots = async () => {
+                try {
+                    const fetchedLots = await getManagerLots();
+                    setLots(fetchedLots);
+                } catch (error) {
+                    console.error("Error fetching lots:", error);
+                } 
+            }
+    
+            getLots();
+        }, []);
 
     return (
         <div className="driver-home">
@@ -26,8 +31,6 @@ function ManagerHomePage() {
                 </div>
             </main>
         </div>
-
-
     );
 }
 

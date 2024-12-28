@@ -19,7 +19,7 @@ public class NotificationRepository {
     public boolean addNotification(Notification notification) {
 
         String sql = "INSERT INTO notification(driver_id, message, type, seen) VALUES(?,?,?,?)";
-        int rowsAffected = jdbcTemplate.update(sql, notification.getDriverID(), notification.getMessage(),
+        int rowsAffected = jdbcTemplate.update(sql, notification.getDriverId(), notification.getMessage(),
                 notification.getType(), false);
         return rowsAffected == 1;
     }

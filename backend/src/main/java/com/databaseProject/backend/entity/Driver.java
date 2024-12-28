@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 @Component
 @Data
 public class Driver {
-
     private int driverId;
     private String licensePlateNumber;
     private String name;
@@ -16,7 +15,4 @@ public class Driver {
     private String phoneNumber;
     private PaymentType paymentMethod;
     private String password;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
-
 }

@@ -18,8 +18,6 @@ public class AdminMapper implements RowMapper<Admin> {
         admin.setEmail(rs.getString("email"));
         admin.setPhoneNumber(rs.getString("phone_number"));
         admin.setPassword(rs.getString("password"));
-        admin.setCreatedAt(rs.getTimestamp("created_at"));
-        admin.setUpdatedAt(rs.getTimestamp("updated_at"));
         return admin;
     }
 }

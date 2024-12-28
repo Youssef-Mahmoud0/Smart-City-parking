@@ -90,7 +90,7 @@ const ParkingLotGrid = ({ parkingSpots, lot, onSpotSelect }) => {
             </div>
 
             <div className="grid-layout">
-                {parkingSpots.map((spot) => (
+                {parkingSpots.map((spot, index) => (
                     <div
                         key={spot.spotId}
                         className={`spot ${getSpotColorClass(spot.status, spot.spotId == selectedSpotId)}-container`}

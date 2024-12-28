@@ -1,15 +1,35 @@
 package com.databaseProject.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.sql.Timestamp;
 
 public class SpotReservationDto {
     private int spotId;
-    private int reservationId;
     private int driverId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Timestamp startTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Timestamp endTime;
     private String status;
-//    private Timestamp expectedEndTime;
+    private double price;
+    private double penalty;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public double getPenalty() {
+        return penalty;
+    }
+
+    public void setPenalty(double penalty) {
+        this.penalty = penalty;
+    }
 
     public int getSpotId() {
         return spotId;
@@ -17,14 +37,6 @@ public class SpotReservationDto {
 
     public void setSpotId(int spotId) {
         this.spotId = spotId;
-    }
-
-    public int getReservationId() {
-        return reservationId;
-    }
-
-    public void setReservationId(int reservationId) {
-        this.reservationId = reservationId;
     }
 
     public int getDriverId() {

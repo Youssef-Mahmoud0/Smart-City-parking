@@ -10,17 +10,16 @@ public class SpotReservationMapper implements RowMapper<SpotReservationDto> {
 
     @Override
     public SpotReservationDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-
-        if (rs.getObject("reservation_id") == null) return null;
-
         SpotReservationDto dto = new SpotReservationDto();
         dto.setSpotId(rs.getInt("spot_id"));
-        dto.setReservationId(rs.getInt("reservation_id"));
-        dto.setDriverId(rs.getInt("driver_id"));
-        dto.setStartTime(rs.getTimestamp("start_time"));
-        dto.setEndTime(rs.getTimestamp("end_time"));
-        dto.setStatus(rs.getString("status"));
-        dto.setEndTime(rs.getTimestamp("end_time"));
+        if (rs.getObject("start_time") != null) {
+            dto.setDriverId(rs.getInt("driver_id"));
+            dto.setStartTime(rs.getTimestamp("start_time"));
+            dto.setEndTime(rs.getTimestamp("end_time"));
+            dto.setStatus(rs.getString("status"));
+            dto.setPrice(rs.getDouble("price"));
+            dto.setPenalty(rs.getDouble("penalty"));
+        }
         return dto;
     }
 }

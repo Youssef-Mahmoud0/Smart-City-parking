@@ -29,8 +29,6 @@ public class DriverMapper implements RowMapper<Driver> {
         }
 
         driver.setPassword(rs.getString("password"));
-        driver.setCreatedAt(rs.getTimestamp("created_at"));
-        driver.setUpdatedAt(rs.getTimestamp("updated_at"));
         return driver;
     }
 }

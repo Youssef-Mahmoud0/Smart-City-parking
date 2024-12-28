@@ -19,7 +19,8 @@ public class PasswordService {
         }
 
     public boolean verifyPassword(String rawPassword, String hashedPassword) {
-        System.out.println("raw pass hashed"+ hashPassword(rawPassword));
+        System.out.println("raw pass hashed "+ hashPassword(rawPassword));
+        System.out.println(hashPassword(rawPassword).equals(hashedPassword));
         return hashPassword(rawPassword).equals(hashedPassword);
     }
 }
